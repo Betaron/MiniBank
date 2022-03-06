@@ -1,4 +1,6 @@
-﻿namespace Minibank.Core
+﻿using Minibank.Core.Utility;
+
+namespace Minibank.Core
 {
     public class CurrencyConverter : ICurrencyConverter
     {
@@ -14,7 +16,7 @@
             var total = amount / _currencyData.GetExchangeRate(code);
 
             if (total < 0)
-                throw new Exception();
+                throw new UserFriendlyException(userFriendlyMessage: "Сумма в целевой валюте отрицательна");
 
             return total;
         }

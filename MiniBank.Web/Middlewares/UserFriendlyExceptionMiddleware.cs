@@ -1,10 +1,12 @@
-﻿namespace Minibank.Web.Middlewares
+﻿using Minibank.Core.Utility;
+
+namespace Minibank.Web.Middlewares
 {
-    public class ExceptionMiddleware
+    public class UserFriendlyExceptionMiddleware
     {
         public readonly RequestDelegate next;
 
-        public ExceptionMiddleware(RequestDelegate next)
+        public UserFriendlyExceptionMiddleware(RequestDelegate next)
         {
             this.next = next;
         }
@@ -15,12 +17,11 @@
             {
                 await next(httpContext);
             }
-            catch (Exception)
+            catch (UserFriendlyException exception)
             {
                 httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
-                await httpContext.Response.WriteAsJsonAsync(new { Message = "Возникла внутренняя ошибка" });
+                await httpContext.Response.WriteAsJsonAsync(new { Message = exception.userFriendlyMessage });
             }
         }
-
     }
 }
