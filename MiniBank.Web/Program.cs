@@ -1,4 +1,4 @@
-namespace MiniBank.Web
+namespace Minibank.Web
 {
     public class Program
     {
