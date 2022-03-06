@@ -7,6 +7,6 @@
         /// </summary>
         /// <param name="amount">Currency amount in rubles</param>
         /// <param name="code">Currency code, like USD, EUR (Now is not available)</param>
-        int ConvertCurrency(int amount, string code);
+        double ConvertCurrency(int amount, string code);
     }
 }

@@ -9,9 +9,9 @@
             _currencyData = currencyData;
         }
 
-        public int ConvertCurrency(int amount, string code)
+        public double ConvertCurrency(int amount, string code)
         {
-            var total = amount * _currencyData.GetExchangeRate(code);
+            var total = amount / _currencyData.GetExchangeRate(code);
 
             if (total < 0)
                 throw new Exception();

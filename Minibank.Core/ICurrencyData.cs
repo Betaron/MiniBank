@@ -8,6 +8,6 @@ namespace Minibank.Core
 {
     public interface ICurrencyData
     {
-        public int GetExchangeRate(string currencyCode);
+        public double GetExchangeRate(string currencyCode);
     }
 }

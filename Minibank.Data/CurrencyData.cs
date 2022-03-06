@@ -10,7 +10,7 @@ namespace Minibank.Data
     public class CurrencyData : ICurrencyData
     {
         private readonly Random _randomValue = new();
-        public int GetExchangeRate(string currencyCode)
+        public double GetExchangeRate(string currencyCode)
         {
             return _randomValue.Next(0, 1000);
         }
