@@ -1,5 +1,6 @@
 ﻿using Minibank.Core;
 using Minibank.Data;
+using Minibank.Web.Middlewares;
 
 namespace Minibank.Web
 {
@@ -34,6 +35,8 @@ namespace Minibank.Web
                 });
             }
 
+            app.UseMiddleware<ExceptionMiddleware>();
+            
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseEndpoints(endpoints => endpoints.MapControllers());

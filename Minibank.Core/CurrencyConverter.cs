@@ -11,7 +11,12 @@
 
         public int ConvertCurrency(int amount, string code)
         {
-            return amount * _currencyData.GetExchangeRate(code);
+            var total = amount * _currencyData.GetExchangeRate(code);
+
+            if (total < 0)
+                throw new Exception();
+
+            return total;
         }
     }
 }
