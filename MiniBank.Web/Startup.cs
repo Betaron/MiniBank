@@ -1,4 +1,7 @@
-﻿namespace MiniBank.Web
+﻿using Minibank.Core;
+using Minibank.Data;
+
+namespace Minibank.Web
 {
     public class Startup
     {
@@ -14,6 +17,9 @@
             services.AddControllers();
             services.AddSwaggerGen(c =>
                 c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "MiniBank.Web", Version = "v1" }));
+
+            services.AddScoped<ICurrencyConverter, CurrencyConverter>();
+            services.AddScoped<ICurrencyData, CurrencyData>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment environment)
