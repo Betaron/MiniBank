@@ -13,12 +13,10 @@ namespace Minibank.Core
 
         public double ConvertCurrency(int amount, string code)
         {
-            var total = amount / _currencyData.GetExchangeRate(code);
-
-            if (total < 0)
+            if (amount < 0)
                 throw new UserFriendlyException(userFriendlyMessage: "Сумма в целевой валюте отрицательна");
 
-            return total;
+            return amount / _currencyData.GetExchangeRate(code);
         }
     }
 }
