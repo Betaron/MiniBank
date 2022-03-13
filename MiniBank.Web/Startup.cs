@@ -19,8 +19,9 @@ namespace Minibank.Web
             services.AddSwaggerGen(c =>
                 c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "MiniBank.Web", Version = "v1" }));
 
-            services.AddScoped<ICurrencyConverter, CurrencyConverter>();
-            services.AddScoped<ICurrencyData, CurrencyData>();
+            services.
+                AddData().
+                AddCore();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment environment)
