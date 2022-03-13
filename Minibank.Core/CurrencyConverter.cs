@@ -1,4 +1,4 @@
-﻿using Minibank.Core.Utility;
+﻿using Minibank.Core.Exceptions;
 
 namespace Minibank.Core
 {

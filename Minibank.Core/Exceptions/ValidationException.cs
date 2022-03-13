@@ -1,4 +1,4 @@
-﻿namespace Minibank.Core.Utility
+﻿namespace Minibank.Core.Exceptions
 {
     public class ValidationException : Exception
     {
