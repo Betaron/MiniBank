@@ -14,7 +14,7 @@ namespace Minibank.Core
         public double ConvertCurrency(int amount, string code)
         {
             if (amount < 0)
-                throw new UserFriendlyException(userFriendlyMessage: "Сумма в целевой валюте отрицательна");
+                throw new ValidationException(validationMessage: "Сумма в целевой валюте отрицательна");
 
             return amount / _currencyData.GetExchangeRate(code);
         }
