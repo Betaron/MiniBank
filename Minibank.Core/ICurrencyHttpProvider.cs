@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Minibank.Core
 {
-    public interface ICurrencyData
+    public interface ICurrencyHttpProvider
     {
         public double GetExchangeRate(string currencyCode);
     }

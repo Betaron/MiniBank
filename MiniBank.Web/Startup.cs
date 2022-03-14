@@ -20,7 +20,7 @@ namespace Minibank.Web
                 c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "MiniBank.Web", Version = "v1" }));
 
             services.
-                AddData().
+                AddData(Configuration).
                 AddCore();
         }
 
