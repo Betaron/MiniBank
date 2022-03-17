@@ -37,8 +37,7 @@ namespace Minibank.Web
             }
 
             app.UseMiddleware<ExceptionMiddleware>();
-            //app.UseMiddleware<ValidationExceptionMiddleware>();
-            
+
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseEndpoints(endpoints => endpoints.MapControllers());
