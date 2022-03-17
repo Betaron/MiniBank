@@ -1,30 +1,72 @@
-﻿namespace Minibank.Core.Domains.Users.Services
+﻿using Minibank.Core.Domains.Users.Repositories;
+using Minibank.Core.Exceptions;
+
+namespace Minibank.Core.Domains.Users.Services
 {
     internal class UserService : IUserService
     {
+        private readonly IUserRepository _userRepository;
+
+        public UserService(IUserRepository userRepository)
+        {
+            _userRepository = userRepository;
+        }
+
         public User GetById(string id)
         {
-            throw new NotImplementedException();
+            var user = _userRepository.GetById(id);
+            if (user is null)
+            {
+                throw new NotFoundException();
+            }
+
+            return user;
         }
 
         public IEnumerable<User> GetAll()
         {
-            throw new NotImplementedException();
+            var users = _userRepository.GetAll();
+            if (users is null)
+            {
+                throw new NotFoundException();
+            }
+
+            return users;
         }
 
         public void Create(User user)
         {
-            throw new NotImplementedException();
+            if (user.Login is null || user.Email is null)
+            {
+                throw new ValidationException("Неверные данные");
+            }
+            
+            _userRepository.Create(user);
         }
 
         public void Update(User user)
         {
-            throw new NotImplementedException();
+            if (_userRepository.GetById(user.Id) is null)
+            {
+                throw new NotFoundException();
+            }
+            
+            _userRepository.Update(user);
         }
 
         public void Delete(string id)
         {
-            throw new NotImplementedException();
+            if (_userRepository.GetById(id) is null)
+            {
+                throw new NotFoundException();
+            }
+
+            if (_userRepository.HasBankAccounts(id))
+            {
+                throw new ValidationException("Есть привязанные банковские аккаунты");
+            }
+
+            _userRepository.Delete(id);
         }
     }
 }
