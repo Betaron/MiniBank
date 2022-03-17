@@ -2,11 +2,11 @@
 {
     public class ValidationException : Exception
     {
-        public string validationMessage;
+        public readonly string ValidationMessage;
 
         public ValidationException(string validationMessage)
         {
-            this.validationMessage = validationMessage;
+            ValidationMessage = validationMessage;
         }
     }
 }
