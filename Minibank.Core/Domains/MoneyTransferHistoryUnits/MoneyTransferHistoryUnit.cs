@@ -1,6 +1,6 @@
 ﻿namespace Minibank.Core.Domains.MoneyTransferHistoryUnits
 {
-    internal class MoneyTransferHistoryUnit
+    public class MoneyTransferHistoryUnit
     {
         public string Id { get; set; }
         public double Amount { get; set; }
