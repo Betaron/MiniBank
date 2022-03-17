@@ -20,7 +20,12 @@ namespace Minibank.Web.Middlewares
             catch (ValidationException exception)
             {
                 httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
-                await httpContext.Response.WriteAsJsonAsync(new { Message = exception.validationMessage });
+                await httpContext.Response.WriteAsJsonAsync(new {Message = exception.ValidationMessage});
+            }
+            catch (NotFoundException)
+            {
+                httpContext.Response.StatusCode = StatusCodes.Status404NotFound;
+                await httpContext.Response.WriteAsJsonAsync(new { Message = "Не найдено" });
             }
             catch (Exception)
             {
