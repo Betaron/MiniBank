@@ -2,7 +2,6 @@
 using Minibank.Core.Domains.BankAccounts;
 using Minibank.Core.Domains.BankAccounts.Services;
 using Minibank.Web.Controllers.BankAccounts.Dto;
-using Minibank.Web.Controllers.Users.Dto;
 
 namespace Minibank.Web.Controllers.BankAccounts
 {
@@ -22,7 +21,7 @@ namespace Minibank.Web.Controllers.BankAccounts
         /// </summary>
         /// <param name="id">Bank account identification number</param>
         /// <returns>Found Bank account</returns>
-        [HttpGet("{id}")]
+        [HttpGet("byId/{id}")]
         public BankAccountDto GetById(string id)
         {
             var model = _bankAccountService.GetById(id);
@@ -44,7 +43,7 @@ namespace Minibank.Web.Controllers.BankAccounts
         /// </summary>
         /// <param name="userId">User identification number</param>
         /// <returns>Found bank accounts</returns>
-        [HttpGet("{userId}")]
+        [HttpGet("byUserId/{userId}")]
         public IEnumerable<BankAccountDto> GetByUserId(string userId)
         {
             return _bankAccountService.GetByUserId(userId).Select(it => new BankAccountDto
@@ -96,11 +95,12 @@ namespace Minibank.Web.Controllers.BankAccounts
         /// Searches bank account and changes based on the passed
         /// </summary>
         /// <param name="model">Bank account to be changed</param>
-        [HttpPut]
-        public void Update(NewBankAccountDto model)
+        [HttpPut("{id}")]
+        public void Update(string id, UpdateBankAccountDto model)
         {
             _bankAccountService.Update(new BankAccount
             {
+                Id = id,
                 UserId = model.UserId,
                 Currency = model.Currency,
                 IsActive = model.IsActive,

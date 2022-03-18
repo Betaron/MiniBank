@@ -1,8 +1,6 @@
 ﻿using Minibank.Core.Domains.BankAccounts.Repositories;
 using Minibank.Core.Domains.MoneyTransferHistoryUnits;
 using Minibank.Core.Domains.MoneyTransferHistoryUnits.Repositories;
-using Minibank.Core.Domains.MoneyTransferHistoryUnits.Services;
-using Minibank.Core.Domains.Users.Repositories;
 using Minibank.Core.Exceptions;
 
 namespace Minibank.Core.Domains.BankAccounts.Services
@@ -44,8 +42,8 @@ namespace Minibank.Core.Domains.BankAccounts.Services
             {
                 throw new ValidationException("Неверные данные");
             }
-
-            if (!_bankAccountRepository.GetValidCurrencies()?.Contains(account.Currency) ?? true)
+            
+            if (!_bankAccountRepository.GetValidCurrencies().ToList().Exists(it => it == account.Currency))
             {
                 throw new ValidationException("Недоступная валюта");
             }
@@ -91,6 +89,11 @@ namespace Minibank.Core.Domains.BankAccounts.Services
 
         public void UpdateBalance(string id, double amount)
         {
+            if (!_bankAccountRepository.GetById(id).IsActive)
+            {
+                throw new ValidationException("Счёт закрыт");
+            }
+
             _bankAccountRepository.UpdateBalance(id, amount);
         }
 

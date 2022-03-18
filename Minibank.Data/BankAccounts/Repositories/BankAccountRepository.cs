@@ -2,6 +2,7 @@
 using Minibank.Core.Domains.BankAccounts.Repositories;
 using Minibank.Core.Domains.Users;
 using Minibank.Core.Exceptions;
+using Minibank.Data.Users.Repositories;
 
 namespace Minibank.Data.BankAccounts.Repositories
 {
@@ -77,6 +78,11 @@ namespace Minibank.Data.BankAccounts.Repositories
 
         public void Create(BankAccount account)
         {
+            if (!UserRepository.UsersStorage.Exists(it => it.Id == account.UserId))
+            {
+                throw new NotFoundException();
+            }
+
             var entity = new BankAccountDbModel
             {
                 Id = Guid.NewGuid().ToString(),
@@ -118,7 +124,7 @@ namespace Minibank.Data.BankAccounts.Repositories
             AccountsStorage.Remove(entity);
         }
 
-        public IEnumerable<string>? GetValidCurrencies()
+        public IEnumerable<string> GetValidCurrencies()
         {
             return ValidCurrencies;
         }
