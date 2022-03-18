@@ -81,20 +81,5 @@
         /// </summary>
         /// <returns>The amount of commission charged in percent, like 0.02 (it's 2%)</returns>
         double GetCommissionPercent();
-
-        /// <summary>
-        /// Calculates the commission amount when transferring between two accounts
-        /// <br/>
-        /// <i>(You need to implement only the basic logic of working with the repository)</i>
-        /// </summary>
-        /// <returns>Commission amount</returns>
-        double CalculateCommission(double amount, string fromAccountId, string toAccountId);
-
-        /// <summary>
-        /// Transferring funds between accounts
-        /// <br/>
-        /// <i>(You need to implement only the basic logic of working with the repository)</i>
-        /// </summary>
-        void MoneyTransaction(double amount, string fromAccountId, string toAccountId);
     }
 }
