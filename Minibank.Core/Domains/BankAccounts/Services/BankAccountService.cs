@@ -75,9 +75,15 @@ namespace Minibank.Core.Domains.BankAccounts.Services
 
         public void CloseAccount(string id)
         {
-            if (_bankAccountRepository.GetById(id).AccountBalance != 0)
+            var account = _bankAccountRepository.GetById(id);
+            if (account.AccountBalance != 0)
             {
                 throw new ValidationException("Баланс не нулевой");
+            }
+
+            if (account.IsActive && account.ClosingDate is not null)
+            {
+                throw new ValidationException("Аккаунт уже закрыт");
             }
 
             _bankAccountRepository.CloseAccount(id);

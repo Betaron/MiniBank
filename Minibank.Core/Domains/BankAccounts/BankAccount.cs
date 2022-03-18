@@ -8,6 +8,6 @@
         public string Currency { get; set; }
         public bool IsActive { get; set; }
         public DateTime OpeningDate { get; set; }
-        public DateTime ClosingDate { get; set; }
+        public DateTime? ClosingDate { get; set; }
     }
 }
