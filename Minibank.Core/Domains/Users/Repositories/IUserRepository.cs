@@ -9,13 +9,13 @@
         /// </summary>
         /// <param name="id">User identification number</param>
         /// <returns>Found user</returns>
-        User? GetById(string id);
+        User GetById(string id);
 
         ///<summary>
         /// <i>(You need to implement only the basic logic of working with the repository)</i>
         /// </summary>
         /// <returns>All users</returns>
-        IEnumerable<User>? GetAll();
+        IEnumerable<User> GetAll();
 
         /// <summary>
         /// Adds a new user. Copies an argument

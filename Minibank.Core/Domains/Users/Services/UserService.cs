@@ -13,25 +13,13 @@ namespace Minibank.Core.Domains.Users.Services
         }
 
         public User GetById(string id)
-        {
-            var user = _userRepository.GetById(id);
-            if (user is null)
-            {
-                throw new NotFoundException();
-            }
-
-            return user;
+        { 
+            return _userRepository.GetById(id);
         }
 
         public IEnumerable<User> GetAll()
         {
-            var users = _userRepository.GetAll();
-            if (users is null)
-            {
-                throw new NotFoundException();
-            }
-
-            return users;
+            return _userRepository.GetAll();
         }
 
         public void Create(User user)
@@ -50,22 +38,12 @@ namespace Minibank.Core.Domains.Users.Services
             {
                 throw new ValidationException("Неверные данные");
             }
-
-            if (_userRepository.GetById(user.Id) is null)
-            {
-                throw new NotFoundException();
-            }
             
             _userRepository.Update(user);
         }
 
         public void Delete(string id)
         {
-            if (_userRepository.GetById(id) is null)
-            {
-                throw new NotFoundException();
-            }
-
             if (_userRepository.HasBankAccounts(id))
             {
                 throw new ValidationException("Есть привязанные банковские аккаунты");
