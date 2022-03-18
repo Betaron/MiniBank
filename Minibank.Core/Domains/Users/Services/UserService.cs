@@ -46,6 +46,11 @@ namespace Minibank.Core.Domains.Users.Services
 
         public void Update(User user)
         {
+            if (user.Login is null || user.Email is null)
+            {
+                throw new ValidationException("Неверные данные");
+            }
+
             if (_userRepository.GetById(user.Id) is null)
             {
                 throw new NotFoundException();
