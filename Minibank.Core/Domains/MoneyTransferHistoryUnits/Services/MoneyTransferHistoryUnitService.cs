@@ -1,36 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Minibank.Core.Domains.MoneyTransferHistoryUnits.Repositories;
 
 namespace Minibank.Core.Domains.MoneyTransferHistoryUnits.Services
 {
     public class MoneyTransferHistoryUnitService : IMoneyTransferHistoryUnitService
     {
+        private readonly IMoneyTransferHistoryUnitRepository _historyRepository;
+
+        public MoneyTransferHistoryUnitService(IMoneyTransferHistoryUnitRepository historyRepository)
+        {
+            _historyRepository = historyRepository;
+        }
+
         public MoneyTransferHistoryUnit GetById(string id)
         {
-            throw new NotImplementedException();
+            return _historyRepository.GetById(id);
         }
 
         public IEnumerable<MoneyTransferHistoryUnit> GetAll()
         {
-            throw new NotImplementedException();
+            return _historyRepository.GetAll();
         }
 
         public void Create(MoneyTransferHistoryUnit unit)
         {
-            throw new NotImplementedException();
+            _historyRepository.Create(unit);
         }
 
         public void Update(MoneyTransferHistoryUnit unit)
         {
-            throw new NotImplementedException();
+            _historyRepository.Update(unit);
         }
 
         public void Delete(string id)
         {
-            throw new NotImplementedException();
+            _historyRepository.Delete(id);
         }
     }
 }
