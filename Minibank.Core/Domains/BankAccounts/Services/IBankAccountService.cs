@@ -7,17 +7,17 @@
         /// </summary>
         /// <param name="id">Bank account identification number</param>
         /// <returns>Found Bank account</returns>
-        BankAccount? GetById(string id);
+        BankAccount GetById(string id);
 
         /// <summary>
         /// Searches for a bank account by user id
         /// </summary>
         /// <param name="userId">User identification number</param>
         /// <returns>Found bank accounts</returns>
-        IEnumerable<BankAccount>? GetByUserId(string userId);
+        IEnumerable<BankAccount> GetByUserId(string userId);
 
         /// <returns>All bank accounts from repository</returns>
-        IEnumerable<BankAccount>? GetAll();
+        IEnumerable<BankAccount> GetAll();
 
         /// <summary>
         /// Adds a new bank account to the repository. Copies an argument
