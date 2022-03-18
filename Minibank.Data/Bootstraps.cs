@@ -1,6 +1,12 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Minibank.Core;
+using Minibank.Core.Domains.BankAccounts.Repositories;
+using Minibank.Core.Domains.MoneyTransferHistoryUnits.Repositories;
+using Minibank.Core.Domains.Users.Repositories;
+using Minibank.Data.BankAccounts.Repositories;
+using Minibank.Data.MoneyTransferHistoryUnits.Repositories;
+using Minibank.Data.Users.Repositories;
 
 namespace Minibank.Data
 {
@@ -13,7 +19,11 @@ namespace Minibank.Data
                     options.BaseAddress = new Uri(configuration["CbrDaily"]);
                 });
 
-                return services;
+                services.AddScoped<IUserRepository, UserRepository>();
+                services.AddScoped<IBankAccountRepository, BankAccountRepository>();
+                services.AddScoped<IMoneyTransferHistoryUnitRepository, MoneyTransferHistoryUnitRepository>();
+
+            return services;
             }
     }
 }
