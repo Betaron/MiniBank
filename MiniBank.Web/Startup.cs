@@ -1,4 +1,5 @@
-﻿using Minibank.Core;
+﻿using System.Reflection;
+using Minibank.Core;
 using Minibank.Data;
 using Minibank.Web.Middlewares;
 
@@ -17,8 +18,12 @@ namespace Minibank.Web
         {
             services.AddControllers();
             services.AddSwaggerGen(c =>
-                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "MiniBank.Web", Version = "v1" }));
-
+            {
+                c.SwaggerDoc("v2", new Microsoft.OpenApi.Models.OpenApiInfo {Title = "MiniBank.Web", Version = "v2"});
+                var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+            });
+            
             services.
                 AddData(Configuration).
                 AddCore();
@@ -32,7 +37,7 @@ namespace Minibank.Web
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "MiniBank.Web v1");
+                    c.SwaggerEndpoint("/swagger/v2/swagger.json", "MiniBank.Web v2");
                 });
             }
 
