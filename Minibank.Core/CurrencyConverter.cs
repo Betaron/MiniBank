@@ -11,7 +11,7 @@ namespace Minibank.Core
             _currencyData = currencyData;
         }
 
-        public double ConvertCurrency(int amount, string fromCurrency, string toCurrency)
+        public double ConvertCurrency(double amount, string fromCurrency, string toCurrency)
         {
             if (amount < 0)
                 throw new ValidationException(validationMessage: "Передано отрицательное количество");

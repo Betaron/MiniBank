@@ -16,7 +16,7 @@ namespace Minibank.Web.Controllers
 
         [HttpGet]
         [Route("convert")]
-        public IActionResult Convert(int amount, string fromCurrency, string toCurrency)
+        public IActionResult Convert(double amount, string fromCurrency, string toCurrency)
         {
             return Ok(_currencyConverter.ConvertCurrency(amount, fromCurrency, toCurrency));
         }
