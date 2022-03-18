@@ -3,7 +3,7 @@ using Minibank.Core.Exceptions;
 
 namespace Minibank.Core.Domains.Users.Services
 {
-    internal class UserService : IUserService
+    public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
 

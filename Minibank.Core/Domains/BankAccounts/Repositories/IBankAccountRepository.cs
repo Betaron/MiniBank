@@ -51,5 +51,50 @@
         /// </summary>
         /// <param name="id">Bank account identification number</param>
         void Delete(string id);
+
+        /// <summary>
+        /// <br/>
+        /// <i>(You need to implement only the basic logic of working with the repository)</i>
+        /// </summary>
+        /// <returns>List of currency codes available for registration</returns>
+        IEnumerable<string>? GetValidCurrencies();
+
+        /// <summary>
+        /// Makes an account inactive and sets a closing date
+        /// <br/>
+        /// <i>(You need to implement only the basic logic of working with the repository)</i>
+        /// </summary>
+        /// <param name="id">Bank account identification number</param>
+        void CloseAccount(string id);
+
+        /// <summary>
+        /// Changes account balance
+        /// <br/>
+        /// <i>(You need to implement only the basic logic of working with the repository)</i>
+        /// </summary>
+        /// <param name="amount">New account balance</param>
+        void UpdateBalance(string id, double amount);
+
+        /// <summary>
+        /// <br/>
+        /// <i>(You need to implement only the basic logic of working with the repository)</i>
+        /// </summary>
+        /// <returns>The amount of commission charged in percent, like 0.02 (it's 2%)</returns>
+        double GetCommissionPercent();
+
+        /// <summary>
+        /// Calculates the commission amount when transferring between two accounts
+        /// <br/>
+        /// <i>(You need to implement only the basic logic of working with the repository)</i>
+        /// </summary>
+        /// <returns>Commission amount</returns>
+        double CalculateCommission(double amount, string fromAccountId, string toAccountId);
+
+        /// <summary>
+        /// Transferring funds between accounts
+        /// <br/>
+        /// <i>(You need to implement only the basic logic of working with the repository)</i>
+        /// </summary>
+        void MoneyTransaction(double amount, string fromAccountId, string toAccountId);
     }
 }
