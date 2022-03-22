@@ -6,7 +6,7 @@ using Minibank.Web.Controllers.MoneyTransferHistoryUnits.Dto;
 namespace Minibank.Web.Controllers.MoneyTransferHistoryUnits
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("history")]
     public class HistoryController
     {
         private readonly IMoneyTransferHistoryUnitService _historyService;

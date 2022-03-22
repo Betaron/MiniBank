@@ -6,7 +6,7 @@ using Minibank.Web.Controllers.Users.Dto;
 namespace Minibank.Web.Controllers.Users
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("user")]
     public class UserController
     {
         private readonly IUserService _userService;
