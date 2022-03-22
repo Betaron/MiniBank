@@ -108,8 +108,6 @@ namespace Minibank.Data.BankAccounts.Repositories
 
             entity.UserId = account.UserId;
             entity.Currency = account.Currency;
-            entity.IsActive = account.IsActive;
-            entity.ClosingDate = account.ClosingDate;
         }
 
         public void Delete(string id)

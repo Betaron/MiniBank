@@ -96,15 +96,13 @@ namespace Minibank.Web.Controllers.BankAccounts
         /// </summary>
         /// <param name="model">Bank account to be changed</param>
         [HttpPut("{id}")]
-        public void Update(string id, UpdateBankAccountDto model)
+        public void Update(string id, NewBankAccountDto model)
         {
             _bankAccountService.Update(new BankAccount
             {
                 Id = id,
                 UserId = model.UserId,
-                Currency = model.Currency,
-                IsActive = model.IsActive,
-                ClosingDate = model.ClosingDate
+                Currency = model.Currency
             });
         }
 
