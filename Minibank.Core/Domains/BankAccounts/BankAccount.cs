@@ -9,5 +9,12 @@
         public bool IsActive { get; set; }
         public DateTime OpeningDate { get; set; }
         public DateTime? ClosingDate { get; set; }
+
+        public enum ValidCurrencies
+        {
+            RUB,
+            USD,
+            EUR
+        }
     }
 }

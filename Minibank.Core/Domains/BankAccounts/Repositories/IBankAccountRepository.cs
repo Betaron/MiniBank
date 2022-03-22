@@ -53,13 +53,6 @@
         void Delete(string id);
 
         /// <summary>
-        /// <br/>
-        /// <i>(You need to implement only the basic logic of working with the repository)</i>
-        /// </summary>
-        /// <returns>List of currency codes available for registration</returns>
-        IEnumerable<string> GetValidCurrencies();
-
-        /// <summary>
         /// Makes an account inactive and sets a closing date
         /// <br/>
         /// <i>(You need to implement only the basic logic of working with the repository)</i>

@@ -43,7 +43,7 @@ namespace Minibank.Core.Domains.BankAccounts.Services
                 throw new ValidationException("Неверные данные");
             }
             
-            if (!_bankAccountRepository.GetValidCurrencies().ToList().Exists(it => it == account.Currency))
+            if (!Enum.IsDefined(typeof(BankAccount.ValidCurrencies), account.Currency))
             {
                 throw new ValidationException("Недоступная валюта");
             }

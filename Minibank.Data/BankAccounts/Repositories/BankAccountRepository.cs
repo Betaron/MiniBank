@@ -9,12 +9,6 @@ namespace Minibank.Data.BankAccounts.Repositories
     public class BankAccountRepository : IBankAccountRepository
     {
         internal static List<BankAccountDbModel> AccountsStorage { get;} = new();
-        private static readonly List<string> ValidCurrencies = new()
-        {
-            "RUB",
-            "USD",
-            "EUR"
-        };
         private static readonly double CommissionPercent = 0.02;
 
         public BankAccount GetById(string id)
@@ -120,11 +114,6 @@ namespace Minibank.Data.BankAccounts.Repositories
             }
 
             AccountsStorage.Remove(entity);
-        }
-
-        public IEnumerable<string> GetValidCurrencies()
-        {
-            return ValidCurrencies;
         }
 
         public void CloseAccount(string id)
