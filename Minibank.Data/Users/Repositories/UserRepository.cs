@@ -28,11 +28,6 @@ namespace Minibank.Data.Users.Repositories
 
         public IEnumerable<User> GetAll()
         {
-            if (UsersStorage.Count == 0)
-            {
-                throw new ObjectNotFoundException("Пользователи не найдены");
-            }
-
             return UsersStorage.Select(it => new User()
             {
                 Id = it.Id,

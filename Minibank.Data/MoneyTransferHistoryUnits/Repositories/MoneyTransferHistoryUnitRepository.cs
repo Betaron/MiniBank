@@ -29,11 +29,6 @@ namespace Minibank.Data.MoneyTransferHistoryUnits.Repositories
 
         public IEnumerable<MoneyTransferHistoryUnit> GetAll()
         {
-            if (HistoryUnitStorage.Count == 0)
-            {
-                throw new ObjectNotFoundException($"Записи в истории не найдены");
-            }
-
             return HistoryUnitStorage.Select(it => new MoneyTransferHistoryUnit
             {
                 Id = it.Id,

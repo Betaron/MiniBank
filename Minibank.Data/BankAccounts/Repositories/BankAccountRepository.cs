@@ -34,11 +34,6 @@ namespace Minibank.Data.BankAccounts.Repositories
 
         public IEnumerable<BankAccount> GetByUserId(string userId)
         {
-            if (AccountsStorage.Count == 0)
-            {
-                throw new ObjectNotFoundException($"Аккаунты пользователя с id {userId} не найдены");
-            }
-
             return AccountsStorage.Where(it => it.UserId == userId)
                 .Select(it => new BankAccount
             {
@@ -54,11 +49,6 @@ namespace Minibank.Data.BankAccounts.Repositories
 
         public IEnumerable<BankAccount> GetAll()
         {
-            if (AccountsStorage.Count == 0)
-            {
-                throw new ObjectNotFoundException("Аккаунты не найдены");
-            }
-
             return AccountsStorage.Select(it => new BankAccount()
             {
                 Id = it.Id,
