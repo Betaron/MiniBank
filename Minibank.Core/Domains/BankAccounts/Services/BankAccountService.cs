@@ -31,6 +31,11 @@ namespace Minibank.Core.Domains.BankAccounts.Services
 
         public IEnumerable<BankAccount> GetByUserId(string userId)
         {
+            if (!_userRepository.Exists(userId))
+            {
+                throw new ObjectNotFoundException($"Пользователь с id {userId} не найден");
+            }
+
             return _bankAccountRepository.GetByUserId(userId);
         }
 
