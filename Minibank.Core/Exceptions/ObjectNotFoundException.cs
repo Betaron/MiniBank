@@ -2,8 +2,10 @@
 {
     public class ObjectNotFoundException : Exception
     {
-        public ObjectNotFoundException()
+        public string Message;
+        public ObjectNotFoundException(string message)
         {
+            Message = message;
         }
     }
 }
