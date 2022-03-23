@@ -39,7 +39,8 @@ namespace Minibank.Data.BankAccounts.Repositories
                 throw new ObjectNotFoundException($"Аккаунты пользователя с id {userId} не найдены");
             }
 
-            return AccountsStorage.Select(it => new BankAccount
+            return AccountsStorage.Where(it => it.UserId == userId)
+                .Select(it => new BankAccount
             {
                 Id = it.Id,
                 UserId = it.UserId,
@@ -48,7 +49,7 @@ namespace Minibank.Data.BankAccounts.Repositories
                 IsActive = it.IsActive,
                 OpeningDate = it.OpeningDate,
                 ClosingDate = it.ClosingDate
-            }).Where(it => it.UserId == userId);
+            });
         }
 
         public IEnumerable<BankAccount> GetAll()
