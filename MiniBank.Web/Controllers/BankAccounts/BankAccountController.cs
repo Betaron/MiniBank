@@ -138,16 +138,6 @@ namespace Minibank.Web.Controllers.BankAccounts
         }
 
         /// <summary>
-        /// Get commission percent value
-        /// </summary>
-        /// <returns>The amount of commission charged in percent</returns>
-        [HttpGet("/commission")]
-        public double GetCommissionPercent()
-        {
-            return _bankAccountService.GetCommissionPercent();
-        }
-
-        /// <summary>
         /// Calculates the commission amount when transferring between two accounts
         /// </summary>
         /// <returns>Commission amount</returns>

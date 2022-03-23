@@ -51,9 +51,6 @@
         /// <param name="amount">New account balance</param>
         void UpdateBalance(string id, double amount);
 
-        /// <returns>The amount of commission charged in percent</returns>
-        double GetCommissionPercent();
-
         /// <summary>
         /// Calculates the commission amount when transferring between two accounts
         /// </summary>

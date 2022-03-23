@@ -67,12 +67,5 @@
         /// </summary>
         /// <param name="amount">New account balance</param>
         void UpdateBalance(string id, double amount);
-
-        /// <summary>
-        /// <br/>
-        /// <i>(You need to implement only the basic logic of working with the repository)</i>
-        /// </summary>
-        /// <returns>The amount of commission charged in percent, like 0.02 (it's 2%)</returns>
-        double GetCommissionPercent();
     }
 }

@@ -9,7 +9,6 @@ namespace Minibank.Data.BankAccounts.Repositories
     public class BankAccountRepository : IBankAccountRepository
     {
         internal static List<BankAccountDbModel> AccountsStorage { get;} = new();
-        private static readonly double CommissionPercent = 0.02;
 
         public BankAccount GetById(string id)
         {
@@ -135,11 +134,6 @@ namespace Minibank.Data.BankAccounts.Repositories
             }
 
             entity.AccountBalance = amount;
-        }
-
-        public double GetCommissionPercent()
-        {
-            return CommissionPercent;
         }
     }
 }

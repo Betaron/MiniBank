@@ -97,11 +97,6 @@ namespace Minibank.Core.Domains.BankAccounts.Services
             _bankAccountRepository.UpdateBalance(id, amount);
         }
 
-        public double GetCommissionPercent()
-        {
-            return  _bankAccountRepository.GetCommissionPercent();
-        }
-
         public double CalculateCommission(double amount, string fromAccountId, string toAccountId)
         {
             if (amount < 1)
@@ -112,7 +107,7 @@ namespace Minibank.Core.Domains.BankAccounts.Services
             var fromUserId = _bankAccountRepository.GetById(fromAccountId).UserId;
             var toUserId = _bankAccountRepository.GetById(toAccountId).UserId;
 
-            var commissionValue = fromUserId != toUserId ? _bankAccountRepository.GetCommissionPercent() : 0.0;
+            var commissionValue = fromUserId != toUserId ? 0.02 : 0.0;
 
             return Math.Round(amount * commissionValue, 2);
         }
