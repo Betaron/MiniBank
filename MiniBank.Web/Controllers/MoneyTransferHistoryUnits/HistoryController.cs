@@ -59,7 +59,7 @@ namespace Minibank.Web.Controllers.MoneyTransferHistoryUnits
         /// </summary>
         /// <param name="model">Template money transfer history unit</param>
         [HttpPost]
-        public void Create(NewHistoryUnitDto model)
+        public void Create(CreateHistoryUnitDto model)
         {
             _historyService.Create(new MoneyTransferHistoryUnit
             {
@@ -76,7 +76,7 @@ namespace Minibank.Web.Controllers.MoneyTransferHistoryUnits
         /// </summary>
         /// <param name="model">Money transfer history unit to be changed</param>
         [HttpPut("{id}")]
-        public void Update(string id, NewHistoryUnitDto model)
+        public void Update(string id, UpdateHistoryUnitDto model)
         {
             _historyService.Update(new MoneyTransferHistoryUnit
             {

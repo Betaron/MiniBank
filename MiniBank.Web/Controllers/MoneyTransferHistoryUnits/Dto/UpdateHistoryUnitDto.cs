@@ -1,6 +1,6 @@
 ﻿namespace Minibank.Web.Controllers.MoneyTransferHistoryUnits.Dto
 {
-    public class NewHistoryUnitDto
+    public class UpdateHistoryUnitDto
     {
         public double Amount { get; set; }
         public string Currency { get; set; }

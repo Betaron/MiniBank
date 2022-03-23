@@ -55,7 +55,7 @@ namespace Minibank.Web.Controllers.Users
         /// </summary>
         /// <param name="model">Template user</param>
         [HttpPost]
-        public void Create(NewUserDto model)
+        public void Create(CreateUserDto model)
         {
             _userService.Create(new User
             {
@@ -69,7 +69,7 @@ namespace Minibank.Web.Controllers.Users
         /// </summary>
         /// <param name="model">User to be changed</param>
         [HttpPut("{id}")]
-        public void Update(string id, NewUserDto model)
+        public void Update(string id, UpdateUserDto model)
         {
             _userService.Update(new User
             {

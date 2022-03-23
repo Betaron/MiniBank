@@ -82,7 +82,7 @@ namespace Minibank.Web.Controllers.BankAccounts
         /// </summary>
         /// <param name="model">Template bank account</param>
         [HttpPost]
-        public void Create(NewBankAccountDto model)
+        public void Create(CreateBankAccountDto model)
         {
             _bankAccountService.Create(new BankAccount
             {
@@ -96,7 +96,7 @@ namespace Minibank.Web.Controllers.BankAccounts
         /// </summary>
         /// <param name="model">Bank account to be changed</param>
         [HttpPut("{id}")]
-        public void Update(string id, NewBankAccountDto model)
+        public void Update(string id, UpdateBankAccountDto model)
         {
             _bankAccountService.Update(new BankAccount
             {
