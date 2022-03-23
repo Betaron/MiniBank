@@ -7,7 +7,7 @@ namespace Minibank.Data.Users.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        internal static List<UserDbModel> UsersStorage { get; } = new();
+        private static List<UserDbModel> UsersStorage { get; } = new();
 
         public User GetById(string id)
         {

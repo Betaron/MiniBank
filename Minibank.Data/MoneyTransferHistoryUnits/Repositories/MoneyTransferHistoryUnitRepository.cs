@@ -6,7 +6,7 @@ namespace Minibank.Data.MoneyTransferHistoryUnits.Repositories
 {
     public class MoneyTransferHistoryUnitRepository : IMoneyTransferHistoryUnitRepository
     {
-        internal static List<MoneyTransferHistoryUnitDbModel> HistoryUnitStorage { get; } = new();
+        private static List<MoneyTransferHistoryUnitDbModel> HistoryUnitStorage { get; } = new();
 
         public MoneyTransferHistoryUnit GetById(string id)
         {

@@ -8,7 +8,7 @@ namespace Minibank.Data.BankAccounts.Repositories
 {
     public class BankAccountRepository : IBankAccountRepository
     {
-        internal static List<BankAccountDbModel> AccountsStorage { get;} = new();
+        private static List<BankAccountDbModel> AccountsStorage = new();
 
         public BankAccount GetById(string id)
         {
