@@ -43,15 +43,6 @@
         void Delete(string id);
 
         /// <summary>
-        /// Looks for at least one existing account associated with the user
-        /// <br/>
-        /// <i>(You need to implement only the basic logic of working with the repository)</i>
-        /// </summary>
-        /// <param name="id">User identification number</param>
-        /// <returns>True if account exists</returns>
-        bool HasBankAccounts(string id);
-
-        /// <summary>
         /// Looking for a specific user
         /// </summary>
         /// <param name="id">User identification number</param>

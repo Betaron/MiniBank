@@ -1,4 +1,5 @@
-﻿using Minibank.Core.Domains.Users.Repositories;
+﻿using Minibank.Core.Domains.BankAccounts.Repositories;
+using Minibank.Core.Domains.Users.Repositories;
 using Minibank.Core.Exceptions;
 
 namespace Minibank.Core.Domains.Users.Services
@@ -6,10 +7,12 @@ namespace Minibank.Core.Domains.Users.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IBankAccountRepository _accountRepository;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, IBankAccountRepository accountRepository)
         {
             _userRepository = userRepository;
+            _accountRepository = accountRepository;
         }
 
         public User GetById(string id)
@@ -44,7 +47,8 @@ namespace Minibank.Core.Domains.Users.Services
 
         public void Delete(string id)
         {
-            var hasAccounts = _userRepository.HasBankAccounts(id);
+            var hasAccounts = _accountRepository.GetAll().ToList().Exists(it =>
+                it.UserId == id);
 
             if (hasAccounts)
             {

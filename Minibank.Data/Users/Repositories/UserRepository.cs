@@ -73,13 +73,6 @@ namespace Minibank.Data.Users.Repositories
             UsersStorage.Remove(entity);
         }
 
-        public bool HasBankAccounts(string id)
-        {
-            return 
-                BankAccountRepository.AccountsStorage.FirstOrDefault(it => 
-                    it.UserId == id) is not null;
-;       }
-
         public bool Exists(string id)
         {
             return UsersStorage.Exists(it => it.Id == id);
