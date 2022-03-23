@@ -63,7 +63,9 @@ namespace Minibank.Core.Domains.BankAccounts.Services
 
         public void Delete(string id)
         {
-            if (_bankAccountRepository.GetById(id).AccountBalance != 0)
+            var account = _bankAccountRepository.GetById(id);
+
+            if (account.AccountBalance != 0)
             {
                 throw new ValidationException("Баланс не нулевой");
             }
@@ -74,6 +76,7 @@ namespace Minibank.Core.Domains.BankAccounts.Services
         public void CloseAccount(string id)
         {
             var account = _bankAccountRepository.GetById(id);
+
             if (account.AccountBalance != 0)
             {
                 throw new ValidationException("Баланс не нулевой");
@@ -89,7 +92,9 @@ namespace Minibank.Core.Domains.BankAccounts.Services
 
         public void UpdateBalance(string id, double amount)
         {
-            if (!_bankAccountRepository.GetById(id).IsActive)
+            var account = _bankAccountRepository.GetById(id);
+
+            if (!account.IsActive)
             {
                 throw new ValidationException("Счёт закрыт");
             }
@@ -104,10 +109,10 @@ namespace Minibank.Core.Domains.BankAccounts.Services
                 throw new ValidationException("Сумма слишком мала");
             }
 
-            var fromUserId = _bankAccountRepository.GetById(fromAccountId).UserId;
-            var toUserId = _bankAccountRepository.GetById(toAccountId).UserId;
+            var fromUser = _bankAccountRepository.GetById(fromAccountId);
+            var toUser = _bankAccountRepository.GetById(toAccountId);
 
-            var commissionValue = fromUserId != toUserId ? 0.02 : 0.0;
+            var commissionValue = fromUser.UserId != toUser.UserId ? 0.02 : 0.0;
 
             return Math.Round(amount * commissionValue, 2);
         }

@@ -44,7 +44,9 @@ namespace Minibank.Core.Domains.Users.Services
 
         public void Delete(string id)
         {
-            if (_userRepository.HasBankAccounts(id))
+            var hasAccounts = _userRepository.HasBankAccounts(id);
+
+            if (hasAccounts)
             {
                 throw new ValidationException("Есть привязанные банковские аккаунты");
             }
