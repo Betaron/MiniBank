@@ -1,8 +1,10 @@
-﻿namespace Minibank.Web.Controllers.BankAccounts.Dto
+﻿using Minibank.Core.Domains.BankAccounts.Enums;
+
+namespace Minibank.Web.Controllers.BankAccounts.Dto
 {
     public class UpdateBankAccountDto
     {
         public string UserId { get; set; }
-        public string Currency { get; set; }
+        public CurrencyType Currency { get; set; }
     }
 }

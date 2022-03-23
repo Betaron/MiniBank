@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Text.Json.Serialization;
 using Minibank.Core;
 using Minibank.Data;
 using Minibank.Web.Middlewares;
@@ -16,7 +17,10 @@ namespace Minibank.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(j =>
+            {
+                j.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v2", new Microsoft.OpenApi.Models.OpenApiInfo {Title = "MiniBank.Web", Version = "v2"});

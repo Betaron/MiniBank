@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Json;
 using Minibank.Core;
+using Minibank.Core.Domains.BankAccounts.Enums;
 using Minibank.Core.Exceptions;
 using Minibank.Data.HttpClients.Models;
 
@@ -14,9 +15,9 @@ namespace Minibank.Data
             _httpClient = httpClient;
         }
 
-        public double GetExchangeRate(string currencyCode)
+        public double GetExchangeRate(CurrencyType currencyCode)
         {
-            if (currencyCode.Equals("RUB"))
+            if (currencyCode.ToString().Equals("RUB"))
             {
                 return 1.0;
             }
@@ -25,12 +26,12 @@ namespace Minibank.Data
                 _httpClient.GetFromJsonAsync<CourseResponse>("daily_json.js").
                     GetAwaiter().GetResult();
 
-            if (!response.Valute.ContainsKey(currencyCode))
+            if (!response.Valute.ContainsKey(currencyCode.ToString()))
             {
                 throw new ValidationException(validationMessage: $"Курс [{currencyCode}] недоступен");
             }
 
-            return response.Valute[currencyCode].Value;
+            return response.Valute[currencyCode.ToString()].Value;
         }
     }
 }

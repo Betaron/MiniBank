@@ -1,4 +1,6 @@
-﻿namespace Minibank.Core
+﻿using Minibank.Core.Domains.BankAccounts.Enums;
+
+namespace Minibank.Core
 {
     public interface ICurrencyConverter
     {
@@ -8,6 +10,6 @@
         /// <param name="amount">Currency amount in rubles</param>
         /// <param name="fromCurrency">Currency code to be transferred</param>
         /// <param name="toCurrency">Currency code to which you want to transfer</param>
-        double ConvertCurrency(double amount, string fromCurrency, string toCurrency);
+        double ConvertCurrency(double amount, CurrencyType fromCurrency, CurrencyType toCurrency);
     }
 }

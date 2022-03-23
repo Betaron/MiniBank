@@ -1,4 +1,5 @@
-﻿using Minibank.Core.Domains.BankAccounts.Repositories;
+﻿using Minibank.Core.Domains.BankAccounts.Enums;
+using Minibank.Core.Domains.BankAccounts.Repositories;
 using Minibank.Core.Domains.MoneyTransferHistoryUnits;
 using Minibank.Core.Domains.MoneyTransferHistoryUnits.Repositories;
 using Minibank.Core.Domains.Users.Repositories;
@@ -46,14 +47,9 @@ namespace Minibank.Core.Domains.BankAccounts.Services
 
         public void Create(BankAccount account)
         {
-            if (account.UserId is null || account.Currency is null)
+            if (account.UserId is null)
             {
                 throw new ValidationException("Неверные данные");
-            }
-            
-            if (!Enum.IsDefined(typeof(BankAccount.ValidCurrencies), account.Currency))
-            {
-                throw new ValidationException("Недоступная валюта");
             }
 
             if (!_userRepository.Exists(account.UserId))
@@ -66,7 +62,7 @@ namespace Minibank.Core.Domains.BankAccounts.Services
 
         public void Update(BankAccount account)
         {
-            if (account.UserId is null || account.Currency is null)
+            if (account.UserId is null)
             {
                 throw new ValidationException("Неверные данные");
             }
