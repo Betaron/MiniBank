@@ -50,5 +50,12 @@
         /// <param name="id">User identification number</param>
         /// <returns>True if account exists</returns>
         bool HasBankAccounts(string id);
+
+        /// <summary>
+        /// Looking for a specific user
+        /// </summary>
+        /// <param name="id">User identification number</param>
+        /// <returns>True if user exists</returns>
+        bool Exists(string id);
     }
 }

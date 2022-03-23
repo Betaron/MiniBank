@@ -1,6 +1,7 @@
 ﻿using Minibank.Core.Domains.BankAccounts.Repositories;
 using Minibank.Core.Domains.MoneyTransferHistoryUnits;
 using Minibank.Core.Domains.MoneyTransferHistoryUnits.Repositories;
+using Minibank.Core.Domains.Users.Repositories;
 using Minibank.Core.Exceptions;
 
 namespace Minibank.Core.Domains.BankAccounts.Services
@@ -9,15 +10,17 @@ namespace Minibank.Core.Domains.BankAccounts.Services
     {
         private readonly IBankAccountRepository _bankAccountRepository;
         private readonly IMoneyTransferHistoryUnitRepository _historyRepository;
+        private readonly IUserRepository _userRepository;
         private readonly ICurrencyConverter _currencyConverter;
 
         public BankAccountService(
             IBankAccountRepository bankAccountRepository, 
             IMoneyTransferHistoryUnitRepository historyRepository, 
-            ICurrencyConverter currencyConverter)
+            ICurrencyConverter currencyConverter, IUserRepository userRepository)
         {
             _bankAccountRepository = bankAccountRepository;
             _historyRepository = historyRepository;
+            _userRepository = userRepository;
             _currencyConverter = currencyConverter;
         }
 
@@ -46,6 +49,11 @@ namespace Minibank.Core.Domains.BankAccounts.Services
             if (!Enum.IsDefined(typeof(BankAccount.ValidCurrencies), account.Currency))
             {
                 throw new ValidationException("Недоступная валюта");
+            }
+
+            if (!_userRepository.Exists(account.UserId))
+            {
+                throw new ObjectNotFoundException($"Пользователь с id {account.UserId} не найден");
             }
 
             _bankAccountRepository.Create(account);

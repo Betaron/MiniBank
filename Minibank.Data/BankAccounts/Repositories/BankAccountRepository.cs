@@ -67,11 +67,6 @@ namespace Minibank.Data.BankAccounts.Repositories
 
         public void Create(BankAccount account)
         {
-            if (!UserRepository.UsersStorage.Exists(it => it.Id == account.UserId))
-            {
-                throw new ObjectNotFoundException($"Пользователь с id {account.UserId} не найден");
-            }
-
             var entity = new BankAccountDbModel
             {
                 Id = Guid.NewGuid().ToString(),

@@ -79,5 +79,10 @@ namespace Minibank.Data.Users.Repositories
                 BankAccountRepository.AccountsStorage.FirstOrDefault(it => 
                     it.UserId == id) is not null;
 ;       }
+
+        public bool Exists(string id)
+        {
+            return UsersStorage.Exists(it => it.Id == id);
+        }
     }
 }
