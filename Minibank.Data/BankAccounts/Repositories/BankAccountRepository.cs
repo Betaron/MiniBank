@@ -17,7 +17,7 @@ namespace Minibank.Data.BankAccounts.Repositories
 
             if (entity is null)
             {
-                throw new NotFoundException();
+                throw new ObjectNotFoundException();
             }
 
             return new BankAccount
@@ -36,7 +36,7 @@ namespace Minibank.Data.BankAccounts.Repositories
         {
             if (AccountsStorage.Count == 0)
             {
-                throw new NotFoundException();
+                throw new ObjectNotFoundException();
             }
 
             return AccountsStorage.Select(it => new BankAccount
@@ -55,7 +55,7 @@ namespace Minibank.Data.BankAccounts.Repositories
         {
             if (AccountsStorage.Count == 0)
             {
-                throw new NotFoundException();
+                throw new ObjectNotFoundException();
             }
 
             return AccountsStorage.Select(it => new BankAccount()
@@ -74,7 +74,7 @@ namespace Minibank.Data.BankAccounts.Repositories
         {
             if (!UserRepository.UsersStorage.Exists(it => it.Id == account.UserId))
             {
-                throw new NotFoundException();
+                throw new ObjectNotFoundException();
             }
 
             var entity = new BankAccountDbModel
@@ -97,7 +97,7 @@ namespace Minibank.Data.BankAccounts.Repositories
 
             if (entity is null)
             {
-                throw new NotFoundException();
+                throw new ObjectNotFoundException();
             }
 
             entity.UserId = account.UserId;
@@ -110,7 +110,7 @@ namespace Minibank.Data.BankAccounts.Repositories
 
             if (entity is null)
             {
-                throw new NotFoundException();
+                throw new ObjectNotFoundException();
             }
 
             AccountsStorage.Remove(entity);
@@ -122,7 +122,7 @@ namespace Minibank.Data.BankAccounts.Repositories
 
             if (entity is null)
             {
-                throw new NotFoundException();
+                throw new ObjectNotFoundException();
             }
 
             entity.IsActive = false;
@@ -135,7 +135,7 @@ namespace Minibank.Data.BankAccounts.Repositories
 
             if (entity is null)
             {
-                throw new NotFoundException();
+                throw new ObjectNotFoundException();
             }
 
             entity.AccountBalance = amount;

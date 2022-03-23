@@ -15,7 +15,7 @@ namespace Minibank.Data.Users.Repositories
 
             if (entity is null)
             {
-                throw new NotFoundException();
+                throw new ObjectNotFoundException();
             }
 
             return new User
@@ -30,7 +30,7 @@ namespace Minibank.Data.Users.Repositories
         {
             if (UsersStorage.Count == 0)
             {
-                throw new NotFoundException();
+                throw new ObjectNotFoundException();
             }
 
             return UsersStorage.Select(it => new User()
@@ -59,7 +59,7 @@ namespace Minibank.Data.Users.Repositories
 
             if (entity is null)
             {
-                throw new NotFoundException();
+                throw new ObjectNotFoundException();
             }
 
             entity.Login = user.Login;
@@ -72,7 +72,7 @@ namespace Minibank.Data.Users.Repositories
 
             if (entity is null)
             {
-                throw new NotFoundException();
+                throw new ObjectNotFoundException();
             }
 
             UsersStorage.Remove(entity);

@@ -14,7 +14,7 @@ namespace Minibank.Data.MoneyTransferHistoryUnits.Repositories
 
             if (entity is null)
             {
-                throw new NotFoundException();
+                throw new ObjectNotFoundException();
             }
 
             return new MoneyTransferHistoryUnit
@@ -31,7 +31,7 @@ namespace Minibank.Data.MoneyTransferHistoryUnits.Repositories
         {
             if (HistoryUnitStorage.Count == 0)
             {
-                throw new NotFoundException();
+                throw new ObjectNotFoundException();
             }
 
             return HistoryUnitStorage.Select(it => new MoneyTransferHistoryUnit
@@ -64,7 +64,7 @@ namespace Minibank.Data.MoneyTransferHistoryUnits.Repositories
 
             if (entity is null)
             {
-                throw new NotFoundException();
+                throw new ObjectNotFoundException();
             }
 
             entity.Amount = unit.Amount;
@@ -79,7 +79,7 @@ namespace Minibank.Data.MoneyTransferHistoryUnits.Repositories
 
             if (entity is null)
             {
-                throw new NotFoundException();
+                throw new ObjectNotFoundException();
             }
 
             HistoryUnitStorage.Remove(entity);
