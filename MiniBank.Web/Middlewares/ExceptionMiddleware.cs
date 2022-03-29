@@ -1,4 +1,6 @@
-﻿namespace Minibank.Web.Middlewares
+﻿using Minibank.Core.Exceptions;
+
+namespace Minibank.Web.Middlewares
 {
     public class ExceptionMiddleware
     {
@@ -14,6 +16,16 @@
             try
             {
                 await next(httpContext);
+            }
+            catch (ValidationException exception)
+            {
+                httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+                await httpContext.Response.WriteAsJsonAsync(new { Message = exception.ValidationMessage});
+            }
+            catch (ObjectNotFoundException exception)
+            {
+                httpContext.Response.StatusCode = StatusCodes.Status404NotFound;
+                await httpContext.Response.WriteAsJsonAsync(new { Message = exception.Message});
             }
             catch (Exception)
             {

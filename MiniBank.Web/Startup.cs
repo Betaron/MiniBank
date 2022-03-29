@@ -1,4 +1,6 @@
-﻿using Minibank.Core;
+﻿using System.Reflection;
+using System.Text.Json.Serialization;
+using Minibank.Core;
 using Minibank.Data;
 using Minibank.Web.Middlewares;
 
@@ -15,12 +17,20 @@ namespace Minibank.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(j =>
+            {
+                j.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
             services.AddSwaggerGen(c =>
-                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "MiniBank.Web", Version = "v1" }));
-
-            services.AddScoped<ICurrencyConverter, CurrencyConverter>();
-            services.AddScoped<ICurrencyData, CurrencyData>();
+            {
+                c.SwaggerDoc("v2", new Microsoft.OpenApi.Models.OpenApiInfo {Title = "MiniBank.Web", Version = "v2"});
+                var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+            });
+            
+            services.
+                AddData(Configuration).
+                AddCore();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment environment)
@@ -31,13 +41,12 @@ namespace Minibank.Web
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "MiniBank.Web v1");
+                    c.SwaggerEndpoint("/swagger/v2/swagger.json", "MiniBank.Web v2");
                 });
             }
 
             app.UseMiddleware<ExceptionMiddleware>();
-            app.UseMiddleware<UserFriendlyExceptionMiddleware>();
-            
+
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseEndpoints(endpoints => endpoints.MapControllers());

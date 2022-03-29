@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Minibank.Core.Domains.BankAccounts.Enums;
 
 namespace Minibank.Core
 {
-    public interface ICurrencyData
+    public interface ICurrencyHttpProvider
     {
-        public double GetExchangeRate(string currencyCode);
+        public double GetExchangeRate(CurrencyType currencyCode);
     }
 }

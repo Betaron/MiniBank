@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Minibank.Core;
+using Minibank.Core.Domains.BankAccounts.Enums;
 
 namespace Minibank.Web.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("currency")]
     public class CurrencyController : ControllerBase
     {
         private readonly ICurrencyConverter _currencyConverter;
@@ -15,10 +16,10 @@ namespace Minibank.Web.Controllers
         }
 
         [HttpGet]
-        [Route("convert")]
-        public IActionResult Convert(int amount, string code)
+        [Route("сonvert")]
+        public IActionResult Convert(double amount, CurrencyType fromCurrency, CurrencyType toCurrency)
         {
-            return Ok(_currencyConverter.ConvertCurrency(amount, code));
+            return Ok(_currencyConverter.ConvertCurrency(amount, fromCurrency, toCurrency));
         }
     }
 }
