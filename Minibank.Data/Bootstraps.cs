@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Minibank.Core;
 using Minibank.Core.Domains.BankAccounts.Repositories;
@@ -20,10 +21,15 @@ namespace Minibank.Data
                     new Uri(configuration["ConnectionStrings:CbrDaily"]);
             });
 
+            services.AddDbContext<MinibankContext>(options =>
+            {
+                options.UseNpgsql(configuration["ConnectionStrings:MinibankDb"]);
+            });
+
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IBankAccountRepository, BankAccountRepository>();
             services.AddScoped<IMoneyTransferHistoryUnitRepository, MoneyTransferHistoryUnitRepository>();
-            
+
             return services;
         }
     }

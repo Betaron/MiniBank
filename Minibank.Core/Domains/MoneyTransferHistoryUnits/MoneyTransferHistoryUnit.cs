@@ -1,4 +1,5 @@
-﻿using Minibank.Core.Domains.BankAccounts.Enums;
+﻿using Minibank.Core.Domains.BankAccounts;
+using Minibank.Core.Domains.BankAccounts.Enums;
 
 namespace Minibank.Core.Domains.MoneyTransferHistoryUnits
 {
@@ -9,5 +10,8 @@ namespace Minibank.Core.Domains.MoneyTransferHistoryUnits
         public CurrencyType Currency { get; set; }
         public string FromAccountId { get; set; }
         public string ToAccountId { get; set; }
+
+        /* navigation properties */
+        public IEnumerable<BankAccount>? BasAccounts { get; set; }
     }
 }

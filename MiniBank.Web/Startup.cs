@@ -2,6 +2,7 @@
 using System.Text.Json.Serialization;
 using Minibank.Core;
 using Minibank.Data;
+using Minibank.Web.HostedServices;
 using Minibank.Web.Middlewares;
 
 namespace Minibank.Web
@@ -31,6 +32,8 @@ namespace Minibank.Web
             services.
                 AddData(Configuration).
                 AddCore();
+
+            services.AddHostedService<MigrationHostedService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment environment)
