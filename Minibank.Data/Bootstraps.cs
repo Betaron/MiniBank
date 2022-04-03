@@ -13,17 +13,18 @@ namespace Minibank.Data
     public static class Bootstraps
     {
         public static IServiceCollection AddData(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddHttpClient<ICurrencyHttpProvider, CurrencyHttpProvider>(options =>
             {
-                services.AddHttpClient<ICurrencyHttpProvider, CurrencyHttpProvider>(options =>
-                {
-                    options.BaseAddress = new Uri(configuration["CbrDaily"]);
-                });
+                options.BaseAddress =
+                    new Uri(configuration["ConnectionStrings:CbrDaily"]);
+            });
 
-                services.AddScoped<IUserRepository, UserRepository>();
-                services.AddScoped<IBankAccountRepository, BankAccountRepository>();
-                services.AddScoped<IMoneyTransferHistoryUnitRepository, MoneyTransferHistoryUnitRepository>();
-
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IBankAccountRepository, BankAccountRepository>();
+            services.AddScoped<IMoneyTransferHistoryUnitRepository, MoneyTransferHistoryUnitRepository>();
+            
             return services;
-            }
+        }
     }
 }
