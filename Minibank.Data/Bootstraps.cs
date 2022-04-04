@@ -29,6 +29,7 @@ namespace Minibank.Data
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IBankAccountRepository, BankAccountRepository>();
             services.AddScoped<IMoneyTransferHistoryUnitRepository, MoneyTransferHistoryUnitRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;
         }

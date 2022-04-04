@@ -79,8 +79,6 @@ namespace Minibank.Data.BankAccounts.Repositories
             };
 
             _context.Accounts.Add(entity);
-
-            _context.SaveChanges();
         }
 
         public void Update(BankAccount account)
@@ -95,8 +93,6 @@ namespace Minibank.Data.BankAccounts.Repositories
 
             entity.UserId = Guid.Parse(account.UserId);
             entity.Currency = account.Currency;
-
-            _context.SaveChanges();
         }
 
         public void Delete(string id)
@@ -109,8 +105,6 @@ namespace Minibank.Data.BankAccounts.Repositories
             }
 
             _context.Accounts.Remove(entity);
-
-            _context.SaveChanges();
         }
 
         public void CloseAccount(string id)
@@ -125,8 +119,6 @@ namespace Minibank.Data.BankAccounts.Repositories
 
             entity.IsActive = false;
             entity.ClosingDate = DateTime.UtcNow;
-
-            _context.SaveChanges();
         }
 
         public void UpdateBalance(string id, double amount)
@@ -140,8 +132,6 @@ namespace Minibank.Data.BankAccounts.Repositories
             }
 
             entity.AccountBalance = amount;
-
-            _context.SaveChanges();
         }
     }
 }

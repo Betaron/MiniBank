@@ -52,8 +52,6 @@ namespace Minibank.Data.Users.Repositories
             };
 
             _context.Users.Add(entity);
-
-            _context.SaveChanges();
         }
 
         public void Update(User user)
@@ -68,8 +66,6 @@ namespace Minibank.Data.Users.Repositories
 
             entity.Login = user.Login;
             entity.Email = user.Email;
-
-            _context.SaveChanges();
         }
 
         public void Delete(string id)
@@ -83,8 +79,6 @@ namespace Minibank.Data.Users.Repositories
             }
 
             _context.Users.Remove(entity);
-
-            _context.SaveChanges();
         }
 
         public bool Exists(string id)

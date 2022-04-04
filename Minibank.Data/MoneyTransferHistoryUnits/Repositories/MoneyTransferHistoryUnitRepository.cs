@@ -59,8 +59,6 @@ namespace Minibank.Data.MoneyTransferHistoryUnits.Repositories
             };
 
             _context.HistoryUnits.Add(entity);
-
-            _context.SaveChanges();
         }
 
         public void Update(MoneyTransferHistoryUnit unit)
@@ -77,8 +75,6 @@ namespace Minibank.Data.MoneyTransferHistoryUnits.Repositories
             entity.Currency = unit.Currency;
             entity.FromAccountId = Guid.Parse(unit.FromAccountId);
             entity.ToAccountId = Guid.Parse(unit.ToAccountId);
-
-            _context.SaveChanges();
         }
 
         public void Delete(string id)
@@ -92,8 +88,6 @@ namespace Minibank.Data.MoneyTransferHistoryUnits.Repositories
             }
 
             _context.HistoryUnits.Remove(entity);
-
-            _context.SaveChanges();
         }
     }
 }

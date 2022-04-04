@@ -13,15 +13,17 @@ namespace Minibank.Core.Domains.BankAccounts.Services
         private readonly IMoneyTransferHistoryUnitRepository _historyRepository;
         private readonly IUserRepository _userRepository;
         private readonly ICurrencyConverter _currencyConverter;
+        private readonly IUnitOfWork _unitOfWork;
 
         public BankAccountService(
             IBankAccountRepository bankAccountRepository, 
             IMoneyTransferHistoryUnitRepository historyRepository, 
-            ICurrencyConverter currencyConverter, IUserRepository userRepository)
+            ICurrencyConverter currencyConverter, IUserRepository userRepository, IUnitOfWork unitOfWork)
         {
             _bankAccountRepository = bankAccountRepository;
             _historyRepository = historyRepository;
             _userRepository = userRepository;
+            _unitOfWork = unitOfWork;
             _currencyConverter = currencyConverter;
         }
 
@@ -58,6 +60,7 @@ namespace Minibank.Core.Domains.BankAccounts.Services
             }
 
             _bankAccountRepository.Create(account);
+            _unitOfWork.SaveChanges();
         }
 
         public void Update(BankAccount account)
@@ -68,6 +71,7 @@ namespace Minibank.Core.Domains.BankAccounts.Services
             }
 
             _bankAccountRepository.Update(account);
+            _unitOfWork.SaveChanges();
         }
 
         public void Delete(string id)
@@ -80,6 +84,7 @@ namespace Minibank.Core.Domains.BankAccounts.Services
             }
 
             _bankAccountRepository.Delete(id);
+            _unitOfWork.SaveChanges();
         }
 
         public void CloseAccount(string id)
@@ -97,6 +102,7 @@ namespace Minibank.Core.Domains.BankAccounts.Services
             }
 
             _bankAccountRepository.CloseAccount(id);
+            _unitOfWork.SaveChanges();
         }
 
         public void UpdateBalance(string id, double amount)
@@ -109,6 +115,7 @@ namespace Minibank.Core.Domains.BankAccounts.Services
             }
 
             _bankAccountRepository.UpdateBalance(id, amount);
+            _unitOfWork.SaveChanges();
         }
 
         public double CalculateCommission(double amount, string fromAccountId, string toAccountId)
@@ -165,6 +172,8 @@ namespace Minibank.Core.Domains.BankAccounts.Services
                 FromAccountId = fromAccountId,
                 ToAccountId = toAccountId
             });
+
+            _unitOfWork.SaveChanges();
         }
     }
 }
