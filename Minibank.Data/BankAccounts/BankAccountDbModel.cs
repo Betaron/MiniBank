@@ -8,8 +8,8 @@ namespace Minibank.Data.BankAccounts
 {
     public class BankAccountDbModel
     {
-        public string Id { get; set; }
-        public string UserId { get; set; }
+        public Guid Id { get; set; }
+        public Guid UserId { get; set; }
         public double AccountBalance { get; set; }
         public CurrencyType Currency { get; set; }
         public bool IsActive { get; set; }
@@ -18,7 +18,8 @@ namespace Minibank.Data.BankAccounts
 
         /* navigation properties */
         public UserDbModel User { get; set; }
-        public List<MoneyTransferHistoryUnitDbModel>? HistoryUnits { get; set; }
+        public List<MoneyTransferHistoryUnitDbModel> TransactionsFrom { get; set; }
+        public List<MoneyTransferHistoryUnitDbModel> TransactionsTo { get; set; }
     }
 
     internal class Map : IEntityTypeConfiguration<BankAccountDbModel>

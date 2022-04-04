@@ -1,17 +1,23 @@
-﻿using Minibank.Core.Domains.Users;
+﻿using Microsoft.EntityFrameworkCore;
+using Minibank.Core.Domains.Users;
 using Minibank.Core.Domains.Users.Repositories;
 using Minibank.Core.Exceptions;
-using Minibank.Data.BankAccounts.Repositories;
 
 namespace Minibank.Data.Users.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private static List<UserDbModel> UsersStorage { get; } = new();
+        private readonly MinibankContext _context;
+
+        public UserRepository(MinibankContext context)
+        {
+            _context = context;
+        }
 
         public User GetById(string id)
         {
-            var entity = UsersStorage.FirstOrDefault(it => it.Id == id);
+            var entity = _context.Users
+                .AsNoTracking().FirstOrDefault(it => it.Id.ToString() == id);
 
             if (entity is null)
             {
@@ -20,7 +26,7 @@ namespace Minibank.Data.Users.Repositories
 
             return new User
             {
-                Id = entity.Id,
+                Id = entity.Id.ToString(),
                 Login = entity.Login,
                 Email = entity.Email
             };
@@ -28,9 +34,9 @@ namespace Minibank.Data.Users.Repositories
 
         public IEnumerable<User> GetAll()
         {
-            return UsersStorage.Select(it => new User()
+            return _context.Users.AsNoTracking().Select(it => new User()
             {
-                Id = it.Id,
+                Id = it.Id.ToString(),
                 Login = it.Login,
                 Email = it.Email
             });
@@ -40,17 +46,20 @@ namespace Minibank.Data.Users.Repositories
         {
             var entity = new UserDbModel
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = Guid.NewGuid(),
                 Login = user.Login,
                 Email = user.Email
             };
 
-            UsersStorage.Add(entity);
+            _context.Users.Add(entity);
+
+            _context.SaveChanges();
         }
 
         public void Update(User user)
         {
-            var entity = UsersStorage.FirstOrDefault(it => it.Id == user.Id);
+            var entity = _context.Users
+                .FirstOrDefault(it => it.Id.ToString() == user.Id);
 
             if (entity is null)
             {
@@ -59,23 +68,28 @@ namespace Minibank.Data.Users.Repositories
 
             entity.Login = user.Login;
             entity.Email = user.Email;
+
+            _context.SaveChanges();
         }
 
         public void Delete(string id)
         {
-            var entity = UsersStorage.FirstOrDefault(it => it.Id == id);
+            var entity = _context.Users
+                .FirstOrDefault(it => it.Id.ToString() == id);
 
             if (entity is null)
             {
                 throw new ObjectNotFoundException($"Пользователь с id {id} не найден");
             }
 
-            UsersStorage.Remove(entity);
+            _context.Users.Remove(entity);
+
+            _context.SaveChanges();
         }
 
         public bool Exists(string id)
         {
-            return UsersStorage.Exists(it => it.Id == id);
+            return _context.Users.Any(it => it.Id.ToString() == id);
         }
     }
 }

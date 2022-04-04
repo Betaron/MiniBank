@@ -10,25 +10,10 @@ namespace Minibank.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "transactions_history",
-                columns: table => new
-                {
-                    id = table.Column<string>(type: "text", nullable: false),
-                    amount = table.Column<double>(type: "double precision", nullable: false),
-                    currency = table.Column<int>(type: "integer", nullable: false),
-                    from_account_id = table.Column<string>(type: "text", nullable: false),
-                    to_account_id = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_history_unit_id", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "users",
                 columns: table => new
                 {
-                    id = table.Column<string>(type: "text", nullable: false),
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
                     login = table.Column<string>(type: "text", nullable: false),
                     email = table.Column<string>(type: "text", nullable: false)
                 },
@@ -41,8 +26,8 @@ namespace Minibank.Data.Migrations
                 name: "bank_accounts",
                 columns: table => new
                 {
-                    id = table.Column<string>(type: "text", nullable: false),
-                    user_id = table.Column<string>(type: "text", nullable: false),
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
                     account_balance = table.Column<double>(type: "double precision", nullable: false),
                     currency = table.Column<int>(type: "integer", nullable: false),
                     is_active = table.Column<bool>(type: "boolean", nullable: false),
@@ -61,25 +46,28 @@ namespace Minibank.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "history_accounts",
+                name: "transactions_history",
                 columns: table => new
                 {
-                    AccountsId = table.Column<string>(type: "text", nullable: false),
-                    HistoryUnitsId = table.Column<string>(type: "text", nullable: false)
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    amount = table.Column<double>(type: "double precision", nullable: false),
+                    currency = table.Column<int>(type: "integer", nullable: false),
+                    from_account_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    to_account_id = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_history_accounts", x => new { x.AccountsId, x.HistoryUnitsId });
+                    table.PrimaryKey("pk_history_unit_id", x => x.id);
                     table.ForeignKey(
-                        name: "FK_history_accounts_bank_accounts_AccountsId",
-                        column: x => x.AccountsId,
+                        name: "FK_transactions_history_bank_accounts_from_account_id",
+                        column: x => x.from_account_id,
                         principalTable: "bank_accounts",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_history_accounts_transactions_history_HistoryUnitsId",
-                        column: x => x.HistoryUnitsId,
-                        principalTable: "transactions_history",
+                        name: "FK_transactions_history_bank_accounts_to_account_id",
+                        column: x => x.to_account_id,
+                        principalTable: "bank_accounts",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -90,21 +78,23 @@ namespace Minibank.Data.Migrations
                 column: "user_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_history_accounts_HistoryUnitsId",
-                table: "history_accounts",
-                column: "HistoryUnitsId");
+                name: "IX_transactions_history_from_account_id",
+                table: "transactions_history",
+                column: "from_account_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_transactions_history_to_account_id",
+                table: "transactions_history",
+                column: "to_account_id");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "history_accounts");
+                name: "transactions_history");
 
             migrationBuilder.DropTable(
                 name: "bank_accounts");
-
-            migrationBuilder.DropTable(
-                name: "transactions_history");
 
             migrationBuilder.DropTable(
                 name: "users");

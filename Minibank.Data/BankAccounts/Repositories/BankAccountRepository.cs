@@ -1,18 +1,23 @@
-﻿using Minibank.Core.Domains.BankAccounts;
+﻿using Microsoft.EntityFrameworkCore;
+using Minibank.Core.Domains.BankAccounts;
 using Minibank.Core.Domains.BankAccounts.Repositories;
-using Minibank.Core.Domains.Users;
 using Minibank.Core.Exceptions;
-using Minibank.Data.Users.Repositories;
 
 namespace Minibank.Data.BankAccounts.Repositories
 {
     public class BankAccountRepository : IBankAccountRepository
     {
-        private static List<BankAccountDbModel> AccountsStorage = new();
+        private readonly MinibankContext _context;
+
+        public BankAccountRepository(MinibankContext context)
+        {
+            _context = context;
+        }
 
         public BankAccount GetById(string id)
         {
-            var entity = AccountsStorage.FirstOrDefault(it => it.Id == id);
+            var entity = _context.Accounts.AsNoTracking()
+                .FirstOrDefault(it => it.Id.ToString() == id);
 
             if (entity is null)
             {
@@ -21,8 +26,8 @@ namespace Minibank.Data.BankAccounts.Repositories
 
             return new BankAccount
             {
-                Id = entity.Id,
-                UserId = entity.UserId,
+                Id = entity.Id.ToString(),
+                UserId = entity.UserId.ToString(),
                 AccountBalance = entity.AccountBalance,
                 Currency = entity.Currency,
                 IsActive = entity.IsActive,
@@ -33,11 +38,11 @@ namespace Minibank.Data.BankAccounts.Repositories
 
         public IEnumerable<BankAccount> GetByUserId(string userId)
         {
-            return AccountsStorage.Where(it => it.UserId == userId)
+            return _context.Accounts.AsNoTracking().Where(it => it.UserId.ToString() == userId)
                 .Select(it => new BankAccount
             {
-                Id = it.Id,
-                UserId = it.UserId,
+                Id = it.Id.ToString(),
+                UserId = it.UserId.ToString(),
                 AccountBalance = it.AccountBalance,
                 Currency = it.Currency,
                 IsActive = it.IsActive,
@@ -48,10 +53,10 @@ namespace Minibank.Data.BankAccounts.Repositories
 
         public IEnumerable<BankAccount> GetAll()
         {
-            return AccountsStorage.Select(it => new BankAccount()
+            return _context.Accounts.AsNoTracking().Select(it => new BankAccount()
             {
-                Id = it.Id,
-                UserId = it.UserId,
+                Id = it.Id.ToString(),
+                UserId = it.UserId.ToString(),
                 AccountBalance = it.AccountBalance,
                 Currency = it.Currency,
                 IsActive = it.IsActive,
@@ -64,46 +69,54 @@ namespace Minibank.Data.BankAccounts.Repositories
         {
             var entity = new BankAccountDbModel
             {
-                Id = Guid.NewGuid().ToString(),
-                UserId = account.UserId,
+                Id = Guid.NewGuid(),
+                UserId = Guid.Parse(account.UserId),
                 AccountBalance = 0,
                 Currency = account.Currency,
                 IsActive = true,
-                OpeningDate = DateTime.Now,
+                OpeningDate = DateTime.UtcNow,
                 ClosingDate = null
             };
 
-            AccountsStorage.Add(entity);
+            _context.Accounts.Add(entity);
+
+            _context.SaveChanges();
         }
 
         public void Update(BankAccount account)
         {
-            var entity = AccountsStorage.FirstOrDefault(it => it.Id == account.Id);
+            var entity = _context.Accounts
+                .FirstOrDefault(it => it.Id.ToString() == account.Id);
 
             if (entity is null)
             {
                 throw new ObjectNotFoundException($"Аккаунт с id {account.Id} не найден");
             }
 
-            entity.UserId = account.UserId;
+            entity.UserId = Guid.Parse(account.UserId);
             entity.Currency = account.Currency;
+
+            _context.SaveChanges();
         }
 
         public void Delete(string id)
         {
-            var entity = AccountsStorage.FirstOrDefault(it => it.Id == id);
+            var entity = _context.Accounts.FirstOrDefault(it => it.Id.ToString() == id);
 
             if (entity is null)
             {
                 throw new ObjectNotFoundException($"Аккаунт с id {id} не найден");
             }
 
-            AccountsStorage.Remove(entity);
+            _context.Accounts.Remove(entity);
+
+            _context.SaveChanges();
         }
 
         public void CloseAccount(string id)
         {
-            var entity = AccountsStorage.FirstOrDefault(it => it.Id == id);
+            var entity = _context.Accounts
+                .FirstOrDefault(it => it.Id.ToString() == id);
 
             if (entity is null)
             {
@@ -111,12 +124,15 @@ namespace Minibank.Data.BankAccounts.Repositories
             }
 
             entity.IsActive = false;
-            entity.ClosingDate = DateTime.Now;
+            entity.ClosingDate = DateTime.UtcNow;
+
+            _context.SaveChanges();
         }
 
         public void UpdateBalance(string id, double amount)
         {
-            var entity = AccountsStorage.FirstOrDefault(it => it.Id == id);
+            var entity = _context.Accounts
+                .FirstOrDefault(it => it.Id.ToString() == id);
 
             if (entity is null)
             {
@@ -124,6 +140,8 @@ namespace Minibank.Data.BankAccounts.Repositories
             }
 
             entity.AccountBalance = amount;
+
+            _context.SaveChanges();
         }
     }
 }

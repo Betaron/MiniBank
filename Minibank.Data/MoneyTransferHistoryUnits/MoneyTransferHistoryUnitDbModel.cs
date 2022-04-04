@@ -7,14 +7,15 @@ namespace Minibank.Data.MoneyTransferHistoryUnits
 {
     public class MoneyTransferHistoryUnitDbModel
     {
-        public string Id { get; set; }
+        public Guid Id { get; set; }
         public double Amount { get; set; }
         public CurrencyType Currency { get; set; }
-        public string FromAccountId { get; set; }
-        public string ToAccountId { get; set; }
+        public Guid FromAccountId { get; set; }
+        public Guid ToAccountId { get; set; }
 
         /* navigation properties */
-        public List<BankAccountDbModel>? Accounts { get; set; }
+        public BankAccountDbModel FromAccount { get; set; }
+        public BankAccountDbModel ToAccount { get; set; }
     }
 
     internal class Map : IEntityTypeConfiguration<MoneyTransferHistoryUnitDbModel>
@@ -36,9 +37,13 @@ namespace Minibank.Data.MoneyTransferHistoryUnits
 
             builder.HasKey(it => it.Id).HasName("pk_history_unit_id");
 
-            builder.HasMany(it => it.Accounts)
-                .WithMany(it => it.HistoryUnits)
-                .UsingEntity(it => it.ToTable("history_accounts"));
+            builder.HasOne(it => it.FromAccount)
+                .WithMany(it => it.TransactionsFrom)
+                .HasForeignKey(it => it.FromAccountId);
+
+            builder.HasOne(it => it.ToAccount)
+                .WithMany(it => it.TransactionsTo)
+                .HasForeignKey(it => it.ToAccountId);
         }
     }
 }

@@ -22,27 +22,11 @@ namespace Minibank.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("history_accounts", b =>
-                {
-                    b.Property<string>("AccountsId")
-                        .HasColumnType("text")
-                        .HasColumnName("account_id");
-
-                    b.Property<string>("HistoryUnitsId")
-                        .HasColumnType("text")
-                        .HasColumnName("history_unit_id");
-
-                    b.HasKey("account_id", "history_unit_id");
-
-                    b.HasIndex("HistoryUnitsId");
-
-                    b.ToTable("history_accounts", (string)null);
-                });
-
             modelBuilder.Entity("Minibank.Data.BankAccounts.BankAccountDbModel", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
 
                     b.Property<double>("AccountBalance")
@@ -65,9 +49,8 @@ namespace Minibank.Data.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("opening_date");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text")
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
                         .HasColumnName("user_id");
 
                     b.HasKey("Id")
@@ -80,8 +63,9 @@ namespace Minibank.Data.Migrations
 
             modelBuilder.Entity("Minibank.Data.MoneyTransferHistoryUnits.MoneyTransferHistoryUnitDbModel", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
 
                     b.Property<double>("Amount")
@@ -92,26 +76,29 @@ namespace Minibank.Data.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("currency");
 
-                    b.Property<string>("FromAccountId")
-                        .IsRequired()
-                        .HasColumnType("text")
+                    b.Property<Guid>("FromAccountId")
+                        .HasColumnType("uuid")
                         .HasColumnName("from_account_id");
 
-                    b.Property<string>("ToAccountId")
-                        .IsRequired()
-                        .HasColumnType("text")
+                    b.Property<Guid>("ToAccountId")
+                        .HasColumnType("uuid")
                         .HasColumnName("to_account_id");
 
                     b.HasKey("Id")
                         .HasName("pk_history_unit_id");
+
+                    b.HasIndex("FromAccountId");
+
+                    b.HasIndex("ToAccountId");
 
                     b.ToTable("transactions_history", (string)null);
                 });
 
             modelBuilder.Entity("Minibank.Data.Users.UserDbModel", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
 
                     b.Property<string>("Email")
@@ -130,21 +117,6 @@ namespace Minibank.Data.Migrations
                     b.ToTable("users", (string)null);
                 });
 
-            modelBuilder.Entity("BankAccountDbModelMoneyTransferHistoryUnitDbModel", b =>
-                {
-                    b.HasOne("Minibank.Data.BankAccounts.BankAccountDbModel", null)
-                        .WithMany()
-                        .HasForeignKey("AccountsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Minibank.Data.MoneyTransferHistoryUnits.MoneyTransferHistoryUnitDbModel", null)
-                        .WithMany()
-                        .HasForeignKey("HistoryUnitsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Minibank.Data.BankAccounts.BankAccountDbModel", b =>
                 {
                     b.HasOne("Minibank.Data.Users.UserDbModel", "User")
@@ -154,6 +126,32 @@ namespace Minibank.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Minibank.Data.MoneyTransferHistoryUnits.MoneyTransferHistoryUnitDbModel", b =>
+                {
+                    b.HasOne("Minibank.Data.BankAccounts.BankAccountDbModel", "FromAccount")
+                        .WithMany("TransactionsFrom")
+                        .HasForeignKey("FromAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Minibank.Data.BankAccounts.BankAccountDbModel", "ToAccount")
+                        .WithMany("TransactionsTo")
+                        .HasForeignKey("ToAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FromAccount");
+
+                    b.Navigation("ToAccount");
+                });
+
+            modelBuilder.Entity("Minibank.Data.BankAccounts.BankAccountDbModel", b =>
+                {
+                    b.Navigation("TransactionsFrom");
+
+                    b.Navigation("TransactionsTo");
                 });
 
             modelBuilder.Entity("Minibank.Data.Users.UserDbModel", b =>

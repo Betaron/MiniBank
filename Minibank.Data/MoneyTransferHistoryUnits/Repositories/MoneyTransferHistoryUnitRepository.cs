@@ -1,4 +1,5 @@
-﻿using Minibank.Core.Domains.MoneyTransferHistoryUnits;
+﻿using Microsoft.EntityFrameworkCore;
+using Minibank.Core.Domains.MoneyTransferHistoryUnits;
 using Minibank.Core.Domains.MoneyTransferHistoryUnits.Repositories;
 using Minibank.Core.Exceptions;
 
@@ -6,11 +7,17 @@ namespace Minibank.Data.MoneyTransferHistoryUnits.Repositories
 {
     public class MoneyTransferHistoryUnitRepository : IMoneyTransferHistoryUnitRepository
     {
-        private static List<MoneyTransferHistoryUnitDbModel> HistoryUnitStorage { get; } = new();
+        private readonly MinibankContext _context;
+
+        public MoneyTransferHistoryUnitRepository(MinibankContext context)
+        {
+            _context = context;
+        }
 
         public MoneyTransferHistoryUnit GetById(string id)
         {
-            var entity = HistoryUnitStorage.FirstOrDefault(it => it.Id == id);
+            var entity = _context.HistoryUnits.AsNoTracking()
+                .FirstOrDefault(it => it.Id.ToString() == id);
 
             if (entity is null)
             {
@@ -19,23 +26,24 @@ namespace Minibank.Data.MoneyTransferHistoryUnits.Repositories
 
             return new MoneyTransferHistoryUnit
             {
-                Id = entity.Id,
+                Id = entity.Id.ToString(),
                 Amount = entity.Amount,
                 Currency = entity.Currency,
-                FromAccountId = entity.FromAccountId,
-                ToAccountId = entity.ToAccountId
+                FromAccountId = entity.FromAccountId.ToString(),
+                ToAccountId = entity.ToAccountId.ToString()
             };
         }
 
         public IEnumerable<MoneyTransferHistoryUnit> GetAll()
         {
-            return HistoryUnitStorage.Select(it => new MoneyTransferHistoryUnit
+            return _context.HistoryUnits.AsNoTracking()
+                .Select(it => new MoneyTransferHistoryUnit
             {
-                Id = it.Id,
+                Id = it.Id.ToString(),
                 Amount = it.Amount,
                 Currency = it.Currency,
-                FromAccountId = it.FromAccountId,
-                ToAccountId = it.ToAccountId
+                FromAccountId = it.FromAccountId.ToString(),
+                ToAccountId = it.ToAccountId.ToString()
             });
         }
 
@@ -43,19 +51,22 @@ namespace Minibank.Data.MoneyTransferHistoryUnits.Repositories
         {
             var entity = new MoneyTransferHistoryUnitDbModel()
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = Guid.NewGuid(),
                 Amount = unit.Amount,
                 Currency = unit.Currency,
-                FromAccountId = unit.FromAccountId,
-                ToAccountId = unit.ToAccountId
+                FromAccountId = Guid.Parse(unit.FromAccountId),
+                ToAccountId = Guid.Parse(unit.ToAccountId)
             };
 
-            HistoryUnitStorage.Add(entity);
+            _context.HistoryUnits.Add(entity);
+
+            _context.SaveChanges();
         }
 
         public void Update(MoneyTransferHistoryUnit unit)
         {
-            var entity = HistoryUnitStorage.FirstOrDefault(it => it.Id == unit.Id);
+            var entity = _context.HistoryUnits
+                .FirstOrDefault(it => it.Id.ToString() == unit.Id);
 
             if (entity is null)
             {
@@ -64,20 +75,25 @@ namespace Minibank.Data.MoneyTransferHistoryUnits.Repositories
 
             entity.Amount = unit.Amount;
             entity.Currency = unit.Currency;
-            entity.FromAccountId = unit.FromAccountId;
-            entity.ToAccountId = unit.ToAccountId;
+            entity.FromAccountId = Guid.Parse(unit.FromAccountId);
+            entity.ToAccountId = Guid.Parse(unit.ToAccountId);
+
+            _context.SaveChanges();
         }
 
         public void Delete(string id)
         {
-            var entity = HistoryUnitStorage.FirstOrDefault(it => it.Id == id);
+            var entity = _context.HistoryUnits
+                .FirstOrDefault(it => it.Id.ToString() == id);
 
             if (entity is null)
             {
                 throw new ObjectNotFoundException($"Запись в истории с id {id} не найдена");
             }
 
-            HistoryUnitStorage.Remove(entity);
+            _context.HistoryUnits.Remove(entity);
+
+            _context.SaveChanges();
         }
     }
 }
