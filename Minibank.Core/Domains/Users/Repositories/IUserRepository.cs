@@ -9,13 +9,13 @@
         /// </summary>
         /// <param name="id">User identification number</param>
         /// <returns>Found user</returns>
-        User GetById(string id);
+        Task<User> GetByIdAsync(string id);
 
         ///<summary>
         /// <i>(You need to implement only the basic logic of working with the repository)</i>
         /// </summary>
         /// <returns>All users</returns>
-        IEnumerable<User> GetAll();
+        Task<IEnumerable<User>> GetAllAsync();
 
         /// <summary>
         /// Adds a new user. Copies an argument
@@ -23,7 +23,7 @@
         /// <i>(You need to implement only the basic logic of working with the repository)</i>
         /// </summary>
         /// <param name="user">Template user</param>
-        void Create(User user);
+        Task CreateAsync(User user);
 
         /// <summary>
         /// Searches for a user by id
@@ -32,7 +32,7 @@
         /// <i>(You need to implement only the basic logic of working with the repository)</i>
         /// </summary>
         /// <param name="user">User to be changed</param>
-        void Update(User user);
+        Task UpdateAsync(User user);
 
         /// <summary>
         /// Deletes a user by id
@@ -40,13 +40,13 @@
         /// <i>(You need to implement only the basic logic of working with the repository)</i>
         /// </summary>
         /// <param name="id">User identification number</param>
-        void Delete(string id);
+        Task DeleteAsync(string id);
 
         /// <summary>
         /// Looking for a specific user
         /// </summary>
         /// <param name="id">User identification number</param>
         /// <returns>True if user exists</returns>
-        bool Exists(string id);
+        Task<bool> ExistsAsync(string id);
     }
 }

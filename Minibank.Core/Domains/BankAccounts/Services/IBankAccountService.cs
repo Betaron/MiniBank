@@ -7,59 +7,59 @@
         /// </summary>
         /// <param name="id">Bank account identification number</param>
         /// <returns>Found Bank account</returns>
-        BankAccount GetById(string id);
+        Task<BankAccount> GetByIdAsync(string id);
 
         /// <summary>
         /// Searches for a bank account by user id
         /// </summary>
         /// <param name="userId">User identification number</param>
         /// <returns>Found bank accounts</returns>
-        IEnumerable<BankAccount> GetByUserId(string userId);
+        Task<IEnumerable<BankAccount>> GetByUserIdAsync(string userId);
 
         /// <returns>All bank accounts from repository</returns>
-        IEnumerable<BankAccount> GetAll();
+        Task<IEnumerable<BankAccount>> GetAllAsync();
 
         /// <summary>
         /// Adds a new bank account to the repository. Copies an argument
         /// </summary>
         /// <param name="account">Template bank account</param>
-        void Create(BankAccount account);
+        Task CreateAsync(BankAccount account);
 
         /// <summary>
         /// Searches the repository for a bank account by id
         /// and changes based on the passed
         /// </summary>
         /// <param name="account">Bank account to be changed</param>
-        void Update(BankAccount account);
+        Task UpdateAsync(BankAccount account);
 
         /// <summary>
         /// Deletes a bank account by id
         /// </summary>
         /// <param name="id">Bank account identification number</param>
-        void Delete(string id);
+        Task DeleteAsync(string id);
 
         /// <summary>
         /// Makes an account inactive and sets a closing date
         /// </summary>
         /// <param name="id">Bank account identification number</param>
-        void CloseAccount(string id);
+        Task CloseAccountAsync(string id);
 
         /// <summary>
         /// Changes account balance
         /// </summary>
         /// <param name="id">Bank account identification number</param>
         /// <param name="amount">New account balance</param>
-        void UpdateBalance(string id, double amount);
+        Task UpdateBalanceAsync(string id, double amount);
 
         /// <summary>
         /// Calculates the commission amount when transferring between two accounts
         /// </summary>
         /// <returns>Commission amount</returns>
-        double CalculateCommission(double amount, string fromAccountId, string toAccountId);
+        Task<double> CalculateCommissionAsync(double amount, string fromAccountId, string toAccountId);
 
         /// <summary>
         /// Transferring funds between accounts
         /// </summary>
-        void MoneyTransaction(double amount, string fromAccountId, string toAccountId);
+        Task MoneyTransactionAsync(double amount, string fromAccountId, string toAccountId);
     }
 }

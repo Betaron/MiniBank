@@ -22,9 +22,9 @@ namespace Minibank.Web.Controllers.Users
         /// <param name="id">User identification number</param>
         /// <returns>Found user</returns>
         [HttpGet("{id}")]
-        public UserDto GetById(string id)
+        public async Task<UserDto> GetById(string id)
         {
-            var model = _userService.GetById(id);
+            var model = await _userService.GetByIdAsync(id);
 
             return new UserDto
             {
@@ -39,10 +39,11 @@ namespace Minibank.Web.Controllers.Users
         /// </summary>
         /// <returns>All users from repository</returns>
         [HttpGet]
-        public IEnumerable<UserDto> GetAll()
+        public async Task<IEnumerable<UserDto>> GetAll()
         {
-            return _userService.GetAll()
-                .Select(it => new UserDto
+            var models = await _userService.GetAllAsync();
+
+            return models.Select(it => new UserDto
                 {
                     Id = it.Id,
                     Login = it.Login,
@@ -55,9 +56,9 @@ namespace Minibank.Web.Controllers.Users
         /// </summary>
         /// <param name="model">Template user</param>
         [HttpPost]
-        public void Create(CreateUserDto model)
+        public async Task Create(CreateUserDto model)
         {
-            _userService.Create(new User
+            await _userService.CreateAsync(new User
             {
                 Login = model.Login,
                 Email = model.Email
@@ -69,9 +70,9 @@ namespace Minibank.Web.Controllers.Users
         /// </summary>
         /// <param name="model">User to be changed</param>
         [HttpPut("{id}")]
-        public void Update(string id, UpdateUserDto model)
+        public async Task Update(string id, UpdateUserDto model)
         {
-            _userService.Update(new User
+            await _userService.UpdateAsync(new User
             {
                 Id = id,
                 Login = model.Login,
@@ -84,9 +85,9 @@ namespace Minibank.Web.Controllers.Users
         /// </summary>
         /// <param name="id">User identification number</param>
         [HttpDelete("{id}")]
-        public void Delete(string id)
+        public async Task Delete(string id)
         {
-            _userService.Delete(id);
+            await _userService.DeleteAsync(id);
         }
     }
 }

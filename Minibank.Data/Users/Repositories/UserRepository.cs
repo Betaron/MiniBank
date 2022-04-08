@@ -14,10 +14,10 @@ namespace Minibank.Data.Users.Repositories
             _context = context;
         }
 
-        public User GetById(string id)
+        public async Task<User> GetByIdAsync(string id)
         {
-            var entity = _context.Users
-                .AsNoTracking().FirstOrDefault(it => it.Id.ToString() == id);
+            var entity = await _context.Users
+                .AsNoTracking().FirstOrDefaultAsync(it => it.Id.ToString() == id);
 
             if (entity is null)
             {
@@ -32,17 +32,19 @@ namespace Minibank.Data.Users.Repositories
             };
         }
 
-        public IEnumerable<User> GetAll()
+        public async Task<IEnumerable<User>> GetAllAsync()
         {
-            return _context.Users.AsNoTracking().Select(it => new User()
+            var data= _context.Users.AsNoTracking().Select(it => new User()
             {
                 Id = it.Id.ToString(),
                 Login = it.Login,
                 Email = it.Email
             });
+
+            return await data.ToListAsync();
         }
 
-        public void Create(User user)
+        public async Task CreateAsync(User user)
         {
             var entity = new UserDbModel
             {
@@ -51,13 +53,13 @@ namespace Minibank.Data.Users.Repositories
                 Email = user.Email
             };
 
-            _context.Users.Add(entity);
+            await _context.Users.AddAsync(entity);
         }
 
-        public void Update(User user)
+        public async Task UpdateAsync(User user)
         {
-            var entity = _context.Users
-                .FirstOrDefault(it => it.Id.ToString() == user.Id);
+            var entity = await _context.Users
+                .FirstOrDefaultAsync(it => it.Id.ToString() == user.Id);
 
             if (entity is null)
             {
@@ -68,10 +70,10 @@ namespace Minibank.Data.Users.Repositories
             entity.Email = user.Email;
         }
 
-        public void Delete(string id)
+        public async Task DeleteAsync(string id)
         {
-            var entity = _context.Users
-                .FirstOrDefault(it => it.Id.ToString() == id);
+            var entity = await _context.Users
+                .FirstOrDefaultAsync(it => it.Id.ToString() == id);
 
             if (entity is null)
             {
@@ -81,9 +83,9 @@ namespace Minibank.Data.Users.Repositories
             _context.Users.Remove(entity);
         }
 
-        public bool Exists(string id)
+        public async Task<bool> ExistsAsync(string id)
         {
-            return _context.Users.Any(it => it.Id.ToString() == id);
+            return await _context.Users.AnyAsync(it => it.Id.ToString() == id);
         }
     }
 }

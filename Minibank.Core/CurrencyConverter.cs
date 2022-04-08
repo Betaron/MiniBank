@@ -12,13 +12,15 @@ namespace Minibank.Core
             _currencyData = currencyData;
         }
 
-        public double ConvertCurrency(double amount, CurrencyType fromCurrency, CurrencyType toCurrency)
+        public async Task<double> ConvertCurrencyAsync(double amount, CurrencyType fromCurrency, CurrencyType toCurrency)
         {
             if (amount < 0)
                 throw new ValidationException(validationMessage: "Передано отрицательное количество");
 
-            return amount * _currencyData.GetExchangeRate(fromCurrency) /
-                   _currencyData.GetExchangeRate(toCurrency);
+            var fromExchangeRate = await _currencyData.GetExchangeRateAsync(fromCurrency);
+            var toExchangeRate = await _currencyData.GetExchangeRateAsync(toCurrency);
+
+            return amount * fromExchangeRate / toExchangeRate;
         }
     }
 }

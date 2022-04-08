@@ -15,14 +15,14 @@ namespace Minibank.Core.Domains.MoneyTransferHistoryUnits.Repositories
         /// </summary>
         /// <param name="id">Money transfer history unit identification number</param>
         /// <returns>Found money transfer history unit</returns>
-        MoneyTransferHistoryUnit GetById(string id);
+        Task<MoneyTransferHistoryUnit> GetByIdAsync(string id);
 
         /// <summary>
         /// <br/>
         /// <i>(You need to implement only the basic logic of working with the repository)</i>
         /// </summary>
         /// <returns>All money transfer history unit</returns>
-        IEnumerable<MoneyTransferHistoryUnit> GetAll();
+        Task<IEnumerable<MoneyTransferHistoryUnit>> GetAllAsync();
 
         /// <summary>
         /// Adds a new money transfer history unit. Copies an argument
@@ -30,7 +30,7 @@ namespace Minibank.Core.Domains.MoneyTransferHistoryUnits.Repositories
         /// <i>(You need to implement only the basic logic of working with the repository)</i>
         /// </summary>
         /// <param name="unit">Template money transfer history unit</param>
-        void Create(MoneyTransferHistoryUnit unit);
+        Task CreateAsync(MoneyTransferHistoryUnit unit);
 
         /// <summary>
         /// Searches for a money transfer history unit by id
@@ -39,7 +39,7 @@ namespace Minibank.Core.Domains.MoneyTransferHistoryUnits.Repositories
         /// <i>(You need to implement only the basic logic of working with the repository)</i>
         /// </summary>
         /// <param name="unit">Money transfer history unit to be changed</param>
-        void Update(MoneyTransferHistoryUnit unit);
+        Task UpdateAsync(MoneyTransferHistoryUnit unit);
 
         /// <summary>
         /// Deletes a money transfer history unit by id
@@ -47,6 +47,6 @@ namespace Minibank.Core.Domains.MoneyTransferHistoryUnits.Repositories
         /// <i>(You need to implement only the basic logic of working with the repository)</i>
         /// </summary>
         /// <param name="id">Money transfer history unit identification number</param>
-        void Delete(string id);
+        Task DeleteAsync(string id);
     }
 }

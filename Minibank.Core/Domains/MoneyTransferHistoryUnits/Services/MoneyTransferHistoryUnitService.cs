@@ -13,32 +13,32 @@ namespace Minibank.Core.Domains.MoneyTransferHistoryUnits.Services
             _unitOfWork = unitOfWork;
         }
 
-        public MoneyTransferHistoryUnit GetById(string id)
+        public Task<MoneyTransferHistoryUnit> GetByIdAsync(string id)
         {
-            return _historyRepository.GetById(id);
+            return _historyRepository.GetByIdAsync(id);
         }
 
-        public IEnumerable<MoneyTransferHistoryUnit> GetAll()
+        public Task<IEnumerable<MoneyTransferHistoryUnit>> GetAllAsync()
         {
-            return _historyRepository.GetAll();
+            return _historyRepository.GetAllAsync();
         }
 
-        public void Create(MoneyTransferHistoryUnit unit)
+        public async Task CreateAsync(MoneyTransferHistoryUnit unit)
         {
-            _historyRepository.Create(unit);
-            _unitOfWork.SaveChanges();
+            await _historyRepository.CreateAsync(unit);
+            await _unitOfWork.SaveChangesAsync();
         }
 
-        public void Update(MoneyTransferHistoryUnit unit)
+        public async Task UpdateAsync(MoneyTransferHistoryUnit unit)
         {
-            _historyRepository.Update(unit);
-            _unitOfWork.SaveChanges();
+            await _historyRepository.UpdateAsync(unit);
+            await _unitOfWork.SaveChangesAsync();
         }
 
-        public void Delete(string id)
+        public async Task DeleteAsync(string id)
         {
-            _historyRepository.Delete(id);
-            _unitOfWork.SaveChanges();
+            await _historyRepository.DeleteAsync(id);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

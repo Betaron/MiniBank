@@ -9,7 +9,7 @@
         /// </summary>
         /// <param name="id">Bank account identification number</param>
         /// <returns>Found Bank account</returns>
-        BankAccount GetById(string id);
+        Task<BankAccount> GetByIdAsync(string id);
 
         /// <summary>
         /// Searches for a bank account by user id
@@ -18,14 +18,14 @@
         /// </summary>
         /// <param name="userId">User identification number</param>
         /// <returns>Found bank accounts</returns>
-        IEnumerable<BankAccount> GetByUserId(string userId);
+        Task<IEnumerable<BankAccount>> GetByUserIdAsync(string userId);
 
         ///<summary>
         ///<br/>
         /// <i>(You need to implement only the basic logic of working with the repository)</i>
         /// </summary>
         /// <returns>All bank accounts</returns>
-        IEnumerable<BankAccount> GetAll();
+        Task<IEnumerable<BankAccount>> GetAllAsync();
 
         /// <summary>
         /// Adds a new bank account. Copies an argument
@@ -33,7 +33,7 @@
         /// <i>(You need to implement only the basic logic of working with the repository)</i>
         /// </summary>
         /// <param name="account">Template bank account</param>
-        void Create(BankAccount account);
+        Task CreateAsync(BankAccount account);
 
         /// <summary>
         /// Searches for a bank account by id
@@ -42,7 +42,7 @@
         /// <i>(You need to implement only the basic logic of working with the repository)</i>
         /// </summary>
         /// <param name="account">Bank account to be changed</param>
-        void Update(BankAccount account);
+        Task UpdateAsync(BankAccount account);
 
         /// <summary>
         /// Deletes a bank account by id
@@ -50,7 +50,7 @@
         /// <i>(You need to implement only the basic logic of working with the repository)</i>
         /// </summary>
         /// <param name="id">Bank account identification number</param>
-        void Delete(string id);
+        Task DeleteAsync(string id);
 
         /// <summary>
         /// Makes an account inactive and sets a closing date
@@ -58,7 +58,7 @@
         /// <i>(You need to implement only the basic logic of working with the repository)</i>
         /// </summary>
         /// <param name="id">Bank account identification number</param>
-        void CloseAccount(string id);
+        Task CloseAccountAsync(string id);
 
         /// <summary>
         /// Changes account balance
@@ -66,6 +66,6 @@
         /// <i>(You need to implement only the basic logic of working with the repository)</i>
         /// </summary>
         /// <param name="amount">New account balance</param>
-        void UpdateBalance(string id, double amount);
+        Task UpdateBalanceAsync(string id, double amount);
     }
 }

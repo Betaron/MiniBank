@@ -9,6 +9,6 @@ namespace Minibank.Core
 {
     public interface ICurrencyHttpProvider
     {
-        public double GetExchangeRate(CurrencyType currencyCode);
+        public Task<double> GetExchangeRateAsync(CurrencyType currencyCode);
     }
 }

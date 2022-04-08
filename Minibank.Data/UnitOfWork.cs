@@ -11,9 +11,9 @@ namespace Minibank.Data
             _context = context;
         }
 
-        public int SaveChanges()
+        public Task<int> SaveChangesAsync()
         {
-            return _context.SaveChanges();
+            return _context.SaveChangesAsync();
         }
     }
 }

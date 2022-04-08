@@ -14,10 +14,10 @@ namespace Minibank.Data.BankAccounts.Repositories
             _context = context;
         }
 
-        public BankAccount GetById(string id)
+        public async Task<BankAccount> GetByIdAsync(string id)
         {
-            var entity = _context.Accounts.AsNoTracking()
-                .FirstOrDefault(it => it.Id.ToString() == id);
+            var entity = await _context.Accounts.AsNoTracking()
+                .FirstOrDefaultAsync(it => it.Id.ToString() == id);
 
             if (entity is null)
             {
@@ -36,10 +36,27 @@ namespace Minibank.Data.BankAccounts.Repositories
             };
         }
 
-        public IEnumerable<BankAccount> GetByUserId(string userId)
+        public async Task<IEnumerable<BankAccount>> GetByUserIdAsync(string userId)
         {
-            return _context.Accounts.AsNoTracking().Where(it => it.UserId.ToString() == userId)
+            var data = (_context.Accounts.AsNoTracking()
+                .Where(it => it.UserId.ToString() == userId)
                 .Select(it => new BankAccount
+                {
+                    Id = it.Id.ToString(),
+                    UserId = it.UserId.ToString(),
+                    AccountBalance = it.AccountBalance,
+                    Currency = it.Currency,
+                    IsActive = it.IsActive,
+                    OpeningDate = it.OpeningDate,
+                    ClosingDate = it.ClosingDate
+                }));
+
+            return await data.ToListAsync();
+        }
+
+        public async Task<IEnumerable<BankAccount>> GetAllAsync()
+        { 
+            var data = _context.Accounts.AsNoTracking().Select(it => new BankAccount()
             {
                 Id = it.Id.ToString(),
                 UserId = it.UserId.ToString(),
@@ -49,23 +66,11 @@ namespace Minibank.Data.BankAccounts.Repositories
                 OpeningDate = it.OpeningDate,
                 ClosingDate = it.ClosingDate
             });
+
+            return await data.ToListAsync();
         }
 
-        public IEnumerable<BankAccount> GetAll()
-        {
-            return _context.Accounts.AsNoTracking().Select(it => new BankAccount()
-            {
-                Id = it.Id.ToString(),
-                UserId = it.UserId.ToString(),
-                AccountBalance = it.AccountBalance,
-                Currency = it.Currency,
-                IsActive = it.IsActive,
-                OpeningDate = it.OpeningDate,
-                ClosingDate = it.ClosingDate
-            });
-        }
-
-        public void Create(BankAccount account)
+        public async Task CreateAsync(BankAccount account)
         {
             var entity = new BankAccountDbModel
             {
@@ -78,13 +83,13 @@ namespace Minibank.Data.BankAccounts.Repositories
                 ClosingDate = null
             };
 
-            _context.Accounts.Add(entity);
+            await _context.Accounts.AddAsync(entity);
         }
 
-        public void Update(BankAccount account)
+        public async Task UpdateAsync(BankAccount account)
         {
-            var entity = _context.Accounts
-                .FirstOrDefault(it => it.Id.ToString() == account.Id);
+            var entity = await _context.Accounts
+                .FirstOrDefaultAsync(it => it.Id.ToString() == account.Id);
 
             if (entity is null)
             {
@@ -95,9 +100,9 @@ namespace Minibank.Data.BankAccounts.Repositories
             entity.Currency = account.Currency;
         }
 
-        public void Delete(string id)
+        public async Task DeleteAsync(string id)
         {
-            var entity = _context.Accounts.FirstOrDefault(it => it.Id.ToString() == id);
+            var entity = await _context.Accounts.FirstOrDefaultAsync(it => it.Id.ToString() == id);
 
             if (entity is null)
             {
@@ -107,10 +112,10 @@ namespace Minibank.Data.BankAccounts.Repositories
             _context.Accounts.Remove(entity);
         }
 
-        public void CloseAccount(string id)
+        public async Task CloseAccountAsync(string id)
         {
-            var entity = _context.Accounts
-                .FirstOrDefault(it => it.Id.ToString() == id);
+            var entity = await _context.Accounts
+                .FirstOrDefaultAsync(it => it.Id.ToString() == id);
 
             if (entity is null)
             {
@@ -121,10 +126,10 @@ namespace Minibank.Data.BankAccounts.Repositories
             entity.ClosingDate = DateTime.UtcNow;
         }
 
-        public void UpdateBalance(string id, double amount)
+        public async Task UpdateBalanceAsync(string id, double amount)
         {
-            var entity = _context.Accounts
-                .FirstOrDefault(it => it.Id.ToString() == id);
+            var entity = await _context.Accounts
+                .FirstOrDefaultAsync(it => it.Id.ToString() == id);
 
             if (entity is null)
             {

@@ -17,50 +17,50 @@ namespace Minibank.Core.Domains.Users.Services
             _unitOfWork = unitOfWork;
         }
 
-        public User GetById(string id)
-        { 
-            return _userRepository.GetById(id);
-        }
-
-        public IEnumerable<User> GetAll()
+        public Task<User> GetByIdAsync(string id)
         {
-            return _userRepository.GetAll();
+            return _userRepository.GetByIdAsync(id);
         }
 
-        public void Create(User user)
+        public Task<IEnumerable<User>> GetAllAsync()
         {
-            if (user.Login is null || user.Email is null)
-            {
-                throw new ValidationException("Неверные данные");
-            }
-            
-            _userRepository.Create(user);
-            _unitOfWork.SaveChanges();
+            return _userRepository.GetAllAsync();
         }
 
-        public void Update(User user)
+        public async Task CreateAsync(User user)
         {
             if (user.Login is null || user.Email is null)
             {
                 throw new ValidationException("Неверные данные");
             }
             
-            _userRepository.Update(user);
-            _unitOfWork.SaveChanges();
+            await _userRepository.CreateAsync(user);
+            await _unitOfWork.SaveChangesAsync();
         }
 
-        public void Delete(string id)
+        public async Task UpdateAsync(User user)
         {
-            var hasAccounts = _accountRepository.GetAll().ToList().Exists(it =>
-                it.UserId == id);
+            if (user.Login is null || user.Email is null)
+            {
+                throw new ValidationException("Неверные данные");
+            }
+            
+            await _userRepository.UpdateAsync(user);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(string id)
+        {
+            var allAccountsQuery = await _accountRepository.GetAllAsync();
+            var hasAccounts = allAccountsQuery.ToList().Exists(it => it.UserId == id);
 
             if (hasAccounts)
             {
                 throw new ValidationException("Есть привязанные банковские аккаунты");
             }
 
-            _userRepository.Delete(id);
-            _unitOfWork.SaveChanges();
+            await _userRepository.DeleteAsync(id);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }
