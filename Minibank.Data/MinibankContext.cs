@@ -35,6 +35,7 @@ namespace Minibank.Data
         {
             var options = new DbContextOptionsBuilder()
                 .UseNpgsql("FakeConnectionStringForMigrations")
+                .UseSnakeCaseNamingConvention()
                 .Options;
 
             return new MinibankContext(options);

@@ -24,6 +24,7 @@ namespace Minibank.Data
             services.AddDbContext<MinibankContext>(options =>
             {
                 options.UseNpgsql(configuration["ConnectionStrings:MinibankDb"]);
+                options.UseSnakeCaseNamingConvention();
             });
 
             services.AddScoped<IUserRepository, UserRepository>();

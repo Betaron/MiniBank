@@ -19,13 +19,6 @@ namespace Minibank.Data.Users
             {
                 builder.ToTable("users");
 
-                builder.Property(it => it.Id)
-                    .HasColumnName("id");
-                builder.Property(it => it.Login)
-                    .HasColumnName("login");
-                builder.Property(it => it.Email)
-                    .HasColumnName("email");
-
                 builder.HasKey(it => it.Id).HasName("pk_user_id");
             }
         }
