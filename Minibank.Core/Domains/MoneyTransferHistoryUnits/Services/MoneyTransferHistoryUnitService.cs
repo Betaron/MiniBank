@@ -13,31 +13,31 @@ namespace Minibank.Core.Domains.MoneyTransferHistoryUnits.Services
             _unitOfWork = unitOfWork;
         }
 
-        public Task<MoneyTransferHistoryUnit> GetByIdAsync(string id)
+        public Task<MoneyTransferHistoryUnit> GetByIdAsync(string id, CancellationToken cancellationToken)
         {
-            return _historyRepository.GetByIdAsync(id);
+            return _historyRepository.GetByIdAsync(id, cancellationToken);
         }
 
-        public Task<IEnumerable<MoneyTransferHistoryUnit>> GetAllAsync()
+        public Task<IEnumerable<MoneyTransferHistoryUnit>> GetAllAsync(CancellationToken cancellationToken)
         {
-            return _historyRepository.GetAllAsync();
+            return _historyRepository.GetAllAsync(cancellationToken);
         }
 
-        public async Task CreateAsync(MoneyTransferHistoryUnit unit)
+        public async Task CreateAsync(MoneyTransferHistoryUnit unit, CancellationToken cancellationToken)
         {
-            await _historyRepository.CreateAsync(unit);
+            await _historyRepository.CreateAsync(unit, cancellationToken);
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(MoneyTransferHistoryUnit unit)
+        public async Task UpdateAsync(MoneyTransferHistoryUnit unit, CancellationToken cancellationToken)
         {
-            await _historyRepository.UpdateAsync(unit);
+            await _historyRepository.UpdateAsync(unit, cancellationToken);
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(string id)
+        public async Task DeleteAsync(string id, CancellationToken cancellationToken)
         {
-            await _historyRepository.DeleteAsync(id);
+            await _historyRepository.DeleteAsync(id, cancellationToken);
             await _unitOfWork.SaveChangesAsync();
         }
     }

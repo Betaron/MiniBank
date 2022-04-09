@@ -22,9 +22,9 @@ namespace Minibank.Web.Controllers.BankAccounts
         /// <param name="id">Bank account identification number</param>
         /// <returns>Found Bank account</returns>
         [HttpGet("{id}")]
-        public async Task<BankAccountDto> GetById(string id)
+        public async Task<BankAccountDto> GetById(string id, CancellationToken cancellationToken)
         {
-            var model = await _bankAccountService.GetByIdAsync(id);
+            var model = await _bankAccountService.GetByIdAsync(id, cancellationToken);
 
             return new BankAccountDto
             {
@@ -44,9 +44,9 @@ namespace Minibank.Web.Controllers.BankAccounts
         /// <param name="userId">User identification number</param>
         /// <returns>Found bank accounts</returns>
         [HttpGet("user-id/{userId}")]
-        public async Task<IEnumerable<BankAccountDto>> GetByUserId(string userId)
+        public async Task<IEnumerable<BankAccountDto>> GetByUserId(string userId, CancellationToken cancellationToken)
         {
-            var models = await _bankAccountService.GetByUserIdAsync(userId);
+            var models = await _bankAccountService.GetByUserIdAsync(userId, cancellationToken);
 
             return models.Select(it => new BankAccountDto
             {
@@ -65,9 +65,9 @@ namespace Minibank.Web.Controllers.BankAccounts
         /// </summary>
         /// <returns>All bank accounts from repository</returns>
         [HttpGet]
-        public async Task<IEnumerable<BankAccountDto>> GetAll()
+        public async Task<IEnumerable<BankAccountDto>> GetAll(CancellationToken cancellationToken)
         {
-            var models = await _bankAccountService.GetAllAsync();
+            var models = await _bankAccountService.GetAllAsync(cancellationToken);
 
             return models.Select(it => new BankAccountDto
             {
@@ -86,13 +86,13 @@ namespace Minibank.Web.Controllers.BankAccounts
         /// </summary>
         /// <param name="model">Template bank account</param>
         [HttpPost]
-        public async Task Create(CreateBankAccountDto model)
+        public async Task Create(CreateBankAccountDto model, CancellationToken cancellationToken)
         {
             await _bankAccountService.CreateAsync(new BankAccount
             {
                 UserId = model.UserId,
                 Currency = model.Currency
-            });
+            }, cancellationToken);
         }
 
         /// <summary>
@@ -100,14 +100,14 @@ namespace Minibank.Web.Controllers.BankAccounts
         /// </summary>
         /// <param name="model">Bank account to be changed</param>
         [HttpPut("{id}")]
-        public async Task Update(string id, UpdateBankAccountDto model)
+        public async Task Update(string id, UpdateBankAccountDto model, CancellationToken cancellationToken)
         {
             await _bankAccountService.UpdateAsync(new BankAccount
             {
                 Id = id,
                 UserId = model.UserId,
                 Currency = model.Currency
-            });
+            }, cancellationToken);
         }
 
         /// <summary>
@@ -115,9 +115,9 @@ namespace Minibank.Web.Controllers.BankAccounts
         /// </summary>
         /// <param name="id">Bank account identification number</param>
         [HttpDelete("{id}")]
-        public async Task Delete(string id)
+        public async Task Delete(string id, CancellationToken cancellationToken)
         {
-            await _bankAccountService.DeleteAsync(id);
+            await _bankAccountService.DeleteAsync(id, cancellationToken);
         }
 
         /// <summary>
@@ -125,9 +125,9 @@ namespace Minibank.Web.Controllers.BankAccounts
         /// </summary>
         /// <param name="id">Bank account identification number</param>
         [HttpPost("close/{id}")]
-        public async Task CloseAccount(string id)
+        public async Task CloseAccount(string id, CancellationToken cancellationToken)
         {
-            await _bankAccountService.CloseAccountAsync(id);
+            await _bankAccountService.CloseAccountAsync(id, cancellationToken);
         }
 
         /// <summary>
@@ -136,9 +136,9 @@ namespace Minibank.Web.Controllers.BankAccounts
         /// <param name="id">Bank account identification number</param>
         /// <param name="amount">New account balance</param>
         [HttpPatch("balance/{id}/{amount}")]
-        public async Task UpdateBalance(string id, double amount)
+        public async Task UpdateBalance(string id, double amount, CancellationToken cancellationToken)
         {
-            await _bankAccountService.UpdateBalanceAsync(id, amount);
+            await _bankAccountService.UpdateBalanceAsync(id, amount, cancellationToken);
         }
 
         /// <summary>
@@ -146,18 +146,18 @@ namespace Minibank.Web.Controllers.BankAccounts
         /// </summary>
         /// <returns>Commission amount</returns>
         [HttpGet("/commission/{fromAccountId}/{toAccountId}/{amount}")]
-        public Task<double> CalculateCommission(double amount, string fromAccountId, string toAccountId)
+        public Task<double> CalculateCommission(double amount, string fromAccountId, string toAccountId, CancellationToken cancellationToken)
         {
-            return _bankAccountService.CalculateCommissionAsync(amount, fromAccountId, toAccountId);
+            return _bankAccountService.CalculateCommissionAsync(amount, fromAccountId, toAccountId, cancellationToken);
         }
 
         /// <summary>
         /// Transferring funds between accounts
         /// </summary>
         [HttpGet("/transaction/{fromAccountId}/{toAccountId}/{amount}")]
-        public async Task MoneyTransaction(double amount, string fromAccountId, string toAccountId)
+        public async Task MoneyTransaction(double amount, string fromAccountId, string toAccountId, CancellationToken cancellationToken)
         { 
-            await _bankAccountService.MoneyTransactionAsync(amount, fromAccountId, toAccountId);
+            await _bankAccountService.MoneyTransactionAsync(amount, fromAccountId, toAccountId, cancellationToken);
         }
     }
 }

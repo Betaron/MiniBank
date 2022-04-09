@@ -17,41 +17,41 @@ namespace Minibank.Core.Domains.Users.Services
             _unitOfWork = unitOfWork;
         }
 
-        public Task<User> GetByIdAsync(string id)
+        public Task<User> GetByIdAsync(string id, CancellationToken cancellationToken)
         {
-            return _userRepository.GetByIdAsync(id);
+            return _userRepository.GetByIdAsync(id, cancellationToken);
         }
 
-        public Task<IEnumerable<User>> GetAllAsync()
+        public Task<IEnumerable<User>> GetAllAsync(CancellationToken cancellationToken)
         {
-            return _userRepository.GetAllAsync();
+            return _userRepository.GetAllAsync(cancellationToken);
         }
 
-        public async Task CreateAsync(User user)
+        public async Task CreateAsync(User user, CancellationToken cancellationToken)
         {
             if (user.Login is null || user.Email is null)
             {
                 throw new ValidationException("Неверные данные");
             }
             
-            await _userRepository.CreateAsync(user);
+            await _userRepository.CreateAsync(user, cancellationToken);
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(User user)
+        public async Task UpdateAsync(User user, CancellationToken cancellationToken)
         {
             if (user.Login is null || user.Email is null)
             {
                 throw new ValidationException("Неверные данные");
             }
             
-            await _userRepository.UpdateAsync(user);
+            await _userRepository.UpdateAsync(user, cancellationToken);
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(string id)
+        public async Task DeleteAsync(string id, CancellationToken cancellationToken)
         {
-            var allAccountsQuery = await _accountRepository.GetAllAsync();
+            var allAccountsQuery = await _accountRepository.GetAllAsync(cancellationToken);
             var hasAccounts = allAccountsQuery.ToList().Exists(it => it.UserId == id);
 
             if (hasAccounts)
@@ -59,7 +59,7 @@ namespace Minibank.Core.Domains.Users.Services
                 throw new ValidationException("Есть привязанные банковские аккаунты");
             }
 
-            await _userRepository.DeleteAsync(id);
+            await _userRepository.DeleteAsync(id, cancellationToken);
             await _unitOfWork.SaveChangesAsync();
         }
     }

@@ -22,9 +22,9 @@ namespace Minibank.Web.Controllers.MoneyTransferHistoryUnits
         /// <param name="id">Money transfer history unit identification number</param>
         /// <returns>Found money transfer history unit</returns>
         [HttpGet("{id}")]
-        public async Task<HistoryUnitDto> GetById(string id)
+        public async Task<HistoryUnitDto> GetById(string id, CancellationToken cancellationToken)
         {
-            var model = await _historyService.GetByIdAsync(id);
+            var model = await _historyService.GetByIdAsync(id, cancellationToken);
 
             return new HistoryUnitDto
             {
@@ -41,9 +41,9 @@ namespace Minibank.Web.Controllers.MoneyTransferHistoryUnits
         /// </summary>
         /// <returns>All money transfer history unit</returns>
         [HttpGet]
-        public async Task<IEnumerable<HistoryUnitDto>> GetAll()
+        public async Task<IEnumerable<HistoryUnitDto>> GetAll(CancellationToken cancellationToken)
         {
-            var models = await _historyService.GetAllAsync();
+            var models = await _historyService.GetAllAsync(cancellationToken);
 
             return models.Select(it => new HistoryUnitDto
                 {
@@ -60,7 +60,7 @@ namespace Minibank.Web.Controllers.MoneyTransferHistoryUnits
         /// </summary>
         /// <param name="model">Template money transfer history unit</param>
         [HttpPost]
-        public async Task Create(CreateHistoryUnitDto model)
+        public async Task Create(CreateHistoryUnitDto model, CancellationToken cancellationToken)
         {
             await _historyService.CreateAsync(new MoneyTransferHistoryUnit
             {
@@ -68,7 +68,7 @@ namespace Minibank.Web.Controllers.MoneyTransferHistoryUnits
                 Currency = model.Currency,
                 FromAccountId = model.FromAccountId,
                 ToAccountId = model.ToAccountId
-            });
+            }, cancellationToken);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Minibank.Web.Controllers.MoneyTransferHistoryUnits
         /// </summary>
         /// <param name="model">Money transfer history unit to be changed</param>
         [HttpPut("{id}")]
-        public async Task Update(string id, UpdateHistoryUnitDto model)
+        public async Task Update(string id, UpdateHistoryUnitDto model, CancellationToken cancellationToken)
         {
             await _historyService.UpdateAsync(new MoneyTransferHistoryUnit
             {
@@ -86,7 +86,7 @@ namespace Minibank.Web.Controllers.MoneyTransferHistoryUnits
                 Currency = model.Currency,
                 FromAccountId = model.FromAccountId,
                 ToAccountId = model.ToAccountId
-            });
+            }, cancellationToken);
         }
 
         /// <summary>
@@ -94,9 +94,9 @@ namespace Minibank.Web.Controllers.MoneyTransferHistoryUnits
         /// </summary>
         /// <param name="id">Money transfer history unit identification number</param>
         [HttpDelete("{id}")]
-        public async Task Delete(string id)
+        public async Task Delete(string id, CancellationToken cancellationToken)
         {
-            await _historyService.DeleteAsync(id);
+            await _historyService.DeleteAsync(id, cancellationToken);
         }
     }
 }

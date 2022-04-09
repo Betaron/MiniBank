@@ -14,10 +14,10 @@ namespace Minibank.Data.BankAccounts.Repositories
             _context = context;
         }
 
-        public async Task<BankAccount> GetByIdAsync(string id)
+        public async Task<BankAccount> GetByIdAsync(string id, CancellationToken cancellationToken)
         {
             var entity = await _context.Accounts.AsNoTracking()
-                .FirstOrDefaultAsync(it => it.Id.ToString() == id);
+                .FirstOrDefaultAsync(it => it.Id.ToString() == id, cancellationToken);
 
             if (entity is null)
             {
@@ -36,7 +36,7 @@ namespace Minibank.Data.BankAccounts.Repositories
             };
         }
 
-        public async Task<IEnumerable<BankAccount>> GetByUserIdAsync(string userId)
+        public async Task<IEnumerable<BankAccount>> GetByUserIdAsync(string userId, CancellationToken cancellationToken)
         {
             var data = (_context.Accounts.AsNoTracking()
                 .Where(it => it.UserId.ToString() == userId)
@@ -51,10 +51,10 @@ namespace Minibank.Data.BankAccounts.Repositories
                     ClosingDate = it.ClosingDate
                 }));
 
-            return await data.ToListAsync();
+            return await data.ToListAsync(cancellationToken);
         }
 
-        public async Task<IEnumerable<BankAccount>> GetAllAsync()
+        public async Task<IEnumerable<BankAccount>> GetAllAsync(CancellationToken cancellationToken)
         { 
             var data = _context.Accounts.AsNoTracking().Select(it => new BankAccount()
             {
@@ -67,10 +67,10 @@ namespace Minibank.Data.BankAccounts.Repositories
                 ClosingDate = it.ClosingDate
             });
 
-            return await data.ToListAsync();
+            return await data.ToListAsync(cancellationToken);
         }
 
-        public async Task CreateAsync(BankAccount account)
+        public async Task CreateAsync(BankAccount account, CancellationToken cancellationToken)
         {
             var entity = new BankAccountDbModel
             {
@@ -83,13 +83,13 @@ namespace Minibank.Data.BankAccounts.Repositories
                 ClosingDate = null
             };
 
-            await _context.Accounts.AddAsync(entity);
+            await _context.Accounts.AddAsync(entity, cancellationToken);
         }
 
-        public async Task UpdateAsync(BankAccount account)
+        public async Task UpdateAsync(BankAccount account, CancellationToken cancellationToken)
         {
             var entity = await _context.Accounts
-                .FirstOrDefaultAsync(it => it.Id.ToString() == account.Id);
+                .FirstOrDefaultAsync(it => it.Id.ToString() == account.Id, cancellationToken);
 
             if (entity is null)
             {
@@ -100,9 +100,10 @@ namespace Minibank.Data.BankAccounts.Repositories
             entity.Currency = account.Currency;
         }
 
-        public async Task DeleteAsync(string id)
+        public async Task DeleteAsync(string id, CancellationToken cancellationToken)
         {
-            var entity = await _context.Accounts.FirstOrDefaultAsync(it => it.Id.ToString() == id);
+            var entity = await _context.Accounts
+                .FirstOrDefaultAsync(it => it.Id.ToString() == id, cancellationToken);
 
             if (entity is null)
             {
@@ -112,10 +113,10 @@ namespace Minibank.Data.BankAccounts.Repositories
             _context.Accounts.Remove(entity);
         }
 
-        public async Task CloseAccountAsync(string id)
+        public async Task CloseAccountAsync(string id, CancellationToken cancellationToken)
         {
             var entity = await _context.Accounts
-                .FirstOrDefaultAsync(it => it.Id.ToString() == id);
+                .FirstOrDefaultAsync(it => it.Id.ToString() == id, cancellationToken);
 
             if (entity is null)
             {
@@ -126,10 +127,10 @@ namespace Minibank.Data.BankAccounts.Repositories
             entity.ClosingDate = DateTime.UtcNow;
         }
 
-        public async Task UpdateBalanceAsync(string id, double amount)
+        public async Task UpdateBalanceAsync(string id, double amount, CancellationToken cancellationToken)
         {
             var entity = await _context.Accounts
-                .FirstOrDefaultAsync(it => it.Id.ToString() == id);
+                .FirstOrDefaultAsync(it => it.Id.ToString() == id, cancellationToken);
 
             if (entity is null)
             {
