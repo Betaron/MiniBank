@@ -1,6 +1,7 @@
-﻿using Minibank.Core.Domains.BankAccounts.Repositories;
+﻿using FluentValidation;
+using Minibank.Core.Domains.BankAccounts.Repositories;
 using Minibank.Core.Domains.Users.Repositories;
-using Minibank.Core.Exceptions;
+using ValidationException = Minibank.Core.Exceptions.ValidationException;
 
 namespace Minibank.Core.Domains.Users.Services
 {
@@ -9,12 +10,15 @@ namespace Minibank.Core.Domains.Users.Services
         private readonly IUserRepository _userRepository;
         private readonly IBankAccountRepository _accountRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IValidator<User> _userValidator;
 
-        public UserService(IUserRepository userRepository, IBankAccountRepository accountRepository, IUnitOfWork unitOfWork)
+        public UserService(IUserRepository userRepository, IBankAccountRepository accountRepository,
+            IUnitOfWork unitOfWork, IValidator<User> userValidator)
         {
             _userRepository = userRepository;
             _accountRepository = accountRepository;
             _unitOfWork = unitOfWork;
+            _userValidator = userValidator;
         }
 
         public Task<User> GetByIdAsync(string id, CancellationToken cancellationToken)
@@ -29,10 +33,7 @@ namespace Minibank.Core.Domains.Users.Services
 
         public async Task CreateAsync(User user, CancellationToken cancellationToken)
         {
-            if (user.Login is null || user.Email is null)
-            {
-                throw new ValidationException("Неверные данные");
-            }
+            await _userValidator.ValidateAndThrowAsync(user, cancellationToken);
             
             await _userRepository.CreateAsync(user, cancellationToken);
             await _unitOfWork.SaveChangesAsync();
@@ -40,16 +41,21 @@ namespace Minibank.Core.Domains.Users.Services
 
         public async Task UpdateAsync(User user, CancellationToken cancellationToken)
         {
-            if (user.Login is null || user.Email is null)
-            {
-                throw new ValidationException("Неверные данные");
-            }
-            
+            await _userValidator.ValidateAndThrowAsync(user, cancellationToken);
+
             await _userRepository.UpdateAsync(user, cancellationToken);
             await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(string id, CancellationToken cancellationToken)
+        {
+            await AccountExistenceValidateAndThrowAsync(id, cancellationToken);
+
+            await _userRepository.DeleteAsync(id, cancellationToken);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        private async Task AccountExistenceValidateAndThrowAsync(string id, CancellationToken cancellationToken)
         {
             var allAccountsQuery = await _accountRepository.GetAllAsync(cancellationToken);
             var hasAccounts = allAccountsQuery.ToList().Exists(it => it.UserId == id);
@@ -58,9 +64,6 @@ namespace Minibank.Core.Domains.Users.Services
             {
                 throw new ValidationException("Есть привязанные банковские аккаунты");
             }
-
-            await _userRepository.DeleteAsync(id, cancellationToken);
-            await _unitOfWork.SaveChangesAsync();
         }
     }
 }
