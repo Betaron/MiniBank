@@ -13,7 +13,8 @@ namespace Minibank.Data
 {
     public static class Bootstraps
     {
-        public static IServiceCollection AddData(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddData(
+            this IServiceCollection services, IConfiguration configuration)
         {
             services.AddHttpClient<ICurrencyHttpProvider, CurrencyHttpProvider>(options =>
             {

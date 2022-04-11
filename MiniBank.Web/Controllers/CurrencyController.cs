@@ -17,9 +17,14 @@ namespace Minibank.Web.Controllers
 
         [HttpGet]
         [Route("сonvert")]
-        public Task<double> Convert(double amount, CurrencyType fromCurrency, CurrencyType toCurrency, CancellationToken cancellationToken)
+        public Task<double> Convert(
+            double amount, 
+            CurrencyType fromCurrency, 
+            CurrencyType toCurrency,
+            CancellationToken cancellationToken)
         {
-            return _currencyConverter.ConvertCurrencyAsync(amount, fromCurrency, toCurrency, cancellationToken);
+            return _currencyConverter.ConvertCurrencyAsync(
+                amount, fromCurrency, toCurrency, cancellationToken);
         }
     }
 }

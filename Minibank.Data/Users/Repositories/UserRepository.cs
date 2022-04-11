@@ -16,8 +16,9 @@ namespace Minibank.Data.Users.Repositories
 
         public async Task<User> GetByIdAsync(string id, CancellationToken cancellationToken)
         {
-            var entity = await _context.Users
-                .AsNoTracking().FirstOrDefaultAsync(it => it.Id.ToString() == id, cancellationToken);
+            var entity = await _context.Users.AsNoTracking()
+                .FirstOrDefaultAsync(it => 
+                    it.Id.ToString() == id, cancellationToken);
 
             if (entity is null)
             {
@@ -59,7 +60,8 @@ namespace Minibank.Data.Users.Repositories
         public async Task UpdateAsync(User user, CancellationToken cancellationToken)
         {
             var entity = await _context.Users
-                .FirstOrDefaultAsync(it => it.Id.ToString() == user.Id, cancellationToken);
+                .FirstOrDefaultAsync(it => 
+                    it.Id.ToString() == user.Id, cancellationToken);
 
             if (entity is null)
             {
@@ -73,7 +75,8 @@ namespace Minibank.Data.Users.Repositories
         public async Task DeleteAsync(string id, CancellationToken cancellationToken)
         {
             var entity = await _context.Users
-                .FirstOrDefaultAsync(it => it.Id.ToString() == id, cancellationToken);
+                .FirstOrDefaultAsync(it => 
+                    it.Id.ToString() == id, cancellationToken);
 
             if (entity is null)
             {
@@ -85,7 +88,8 @@ namespace Minibank.Data.Users.Repositories
 
         public async Task<bool> ExistsAsync(string id, CancellationToken cancellationToken)
         {
-            return await _context.Users.AnyAsync(it => it.Id.ToString() == id, cancellationToken);
+            return await _context.Users.AnyAsync(it =>
+                it.Id.ToString() == id, cancellationToken);
         }
     }
 }

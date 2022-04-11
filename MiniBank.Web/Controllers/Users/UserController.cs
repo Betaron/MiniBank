@@ -72,7 +72,8 @@ namespace Minibank.Web.Controllers.Users
         /// </summary>
         /// <param name="model">User to be changed</param>
         [HttpPut("{id}")]
-        public async Task Update(string id, UpdateUserDto model, CancellationToken cancellationToken)
+        public async Task Update(
+            string id, UpdateUserDto model, CancellationToken cancellationToken)
         {
             await _userService.UpdateAsync(new User
             {

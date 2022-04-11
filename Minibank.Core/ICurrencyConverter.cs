@@ -10,6 +10,10 @@ namespace Minibank.Core
         /// <param name="amount">Currency amount in rubles</param>
         /// <param name="fromCurrency">Currency code to be transferred</param>
         /// <param name="toCurrency">Currency code to which you want to transfer</param>
-        Task<double> ConvertCurrencyAsync(double amount, CurrencyType fromCurrency, CurrencyType toCurrency, CancellationToken cancellationToken);
+        Task<double> ConvertCurrencyAsync(
+            double amount, 
+            CurrencyType fromCurrency, 
+            CurrencyType toCurrency, 
+            CancellationToken cancellationToken);
     }
 }

@@ -20,7 +20,8 @@ namespace Minibank.Web.Middlewares
             catch (ValidationException exception)
             {
                 httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
-                await httpContext.Response.WriteAsJsonAsync(new { Message = exception.ValidationMessage});
+                await httpContext.Response.WriteAsJsonAsync(
+                    new {Message = exception.ValidationMessage});
             }
             catch (FluentValidation.ValidationException exception)
             {
@@ -36,12 +37,13 @@ namespace Minibank.Web.Middlewares
             catch (ObjectNotFoundException exception)
             {
                 httpContext.Response.StatusCode = StatusCodes.Status404NotFound;
-                await httpContext.Response.WriteAsJsonAsync(new { Message = exception.Message});
+                await httpContext.Response.WriteAsJsonAsync(new {Message = exception.Message});
             }
             catch (Exception)
             {
                 httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                await httpContext.Response.WriteAsJsonAsync(new { Message = "Возникла внутренняя ошибка" });
+                await httpContext.Response.WriteAsJsonAsync(
+                    new {Message = "Возникла внутренняя ошибка"});
             }
         }
 

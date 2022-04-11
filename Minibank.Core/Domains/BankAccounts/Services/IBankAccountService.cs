@@ -60,6 +60,6 @@
         /// <summary>
         /// Transferring funds between accounts
         /// </summary>
-        Task MoneyTransactionAsync(double amount, string fromAccountId, string toAccountId, CancellationToken cancellationToken);
+        Task MoneyTransactAsync(double amount, string fromAccountId, string toAccountId, CancellationToken cancellationToken);
     }
 }

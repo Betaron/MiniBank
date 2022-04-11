@@ -77,7 +77,8 @@ namespace Minibank.Web.Controllers.MoneyTransferHistoryUnits
         /// </summary>
         /// <param name="model">Money transfer history unit to be changed</param>
         [HttpPut("{id}")]
-        public async Task Update(string id, UpdateHistoryUnitDto model, CancellationToken cancellationToken)
+        public async Task Update(
+            string id, UpdateHistoryUnitDto model, CancellationToken cancellationToken)
         {
             await _historyService.UpdateAsync(new MoneyTransferHistoryUnit
             {

@@ -13,8 +13,11 @@ namespace Minibank.Core.Domains.Users.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly EmptyFieldsValidator _userValidator;
 
-        public UserService(IUserRepository userRepository, IBankAccountRepository accountRepository,
-            IUnitOfWork unitOfWork, EmptyFieldsValidator userValidator)
+        public UserService(
+            IUserRepository userRepository, 
+            IBankAccountRepository accountRepository,
+            IUnitOfWork unitOfWork, 
+            EmptyFieldsValidator userValidator)
         {
             _userRepository = userRepository;
             _accountRepository = accountRepository;
@@ -56,14 +59,18 @@ namespace Minibank.Core.Domains.Users.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        private async Task AccountExistenceValidateAndThrowAsync(string id, CancellationToken cancellationToken)
+        private async Task AccountExistenceValidateAndThrowAsync(
+            string id, CancellationToken cancellationToken)
         {
-            var allAccountsQuery = await _accountRepository.GetAllAsync(cancellationToken);
-            var hasAccounts = allAccountsQuery.ToList().Exists(it => it.UserId == id);
+            var allAccountsQuery = 
+                await _accountRepository.GetAllAsync(cancellationToken);
+            var hasAccounts = 
+                allAccountsQuery.ToList().Exists(it => it.UserId == id);
 
             if (hasAccounts)
             {
-                throw new ValidationException("Есть привязанные банковские аккаунты");
+                throw new ValidationException(
+                    "Есть привязанные банковские аккаунты");
             }
         }
     }

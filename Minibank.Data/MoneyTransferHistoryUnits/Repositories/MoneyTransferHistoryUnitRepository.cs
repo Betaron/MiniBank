@@ -14,10 +14,12 @@ namespace Minibank.Data.MoneyTransferHistoryUnits.Repositories
             _context = context;
         }
 
-        public async Task<MoneyTransferHistoryUnit> GetByIdAsync(string id, CancellationToken cancellationToken)
+        public async Task<MoneyTransferHistoryUnit> GetByIdAsync(
+            string id, CancellationToken cancellationToken)
         {
             var entity = await _context.HistoryUnits.AsNoTracking()
-                .FirstOrDefaultAsync(it => it.Id.ToString() == id, cancellationToken);
+                .FirstOrDefaultAsync(it => 
+                    it.Id.ToString() == id, cancellationToken);
 
             if (entity is null)
             {
@@ -34,7 +36,8 @@ namespace Minibank.Data.MoneyTransferHistoryUnits.Repositories
             };
         }
 
-        public async Task<IEnumerable<MoneyTransferHistoryUnit>> GetAllAsync(CancellationToken cancellationToken)
+        public async Task<IEnumerable<MoneyTransferHistoryUnit>> GetAllAsync(
+            CancellationToken cancellationToken)
         {
             var data = _context.HistoryUnits.AsNoTracking()
                 .Select(it => new MoneyTransferHistoryUnit
@@ -49,7 +52,8 @@ namespace Minibank.Data.MoneyTransferHistoryUnits.Repositories
             return await data.ToListAsync(cancellationToken);
         }
 
-        public async Task CreateAsync(MoneyTransferHistoryUnit unit, CancellationToken cancellationToken)
+        public async Task CreateAsync(
+            MoneyTransferHistoryUnit unit, CancellationToken cancellationToken)
         {
             var entity = new MoneyTransferHistoryUnitDbModel()
             {
@@ -63,14 +67,17 @@ namespace Minibank.Data.MoneyTransferHistoryUnits.Repositories
             await _context.HistoryUnits.AddAsync(entity, cancellationToken);
         }
 
-        public async Task UpdateAsync(MoneyTransferHistoryUnit unit, CancellationToken cancellationToken)
+        public async Task UpdateAsync(
+            MoneyTransferHistoryUnit unit, CancellationToken cancellationToken)
         {
             var entity = await _context.HistoryUnits
-                .FirstOrDefaultAsync(it => it.Id.ToString() == unit.Id, cancellationToken);
+                .FirstOrDefaultAsync(it => 
+                    it.Id.ToString() == unit.Id, cancellationToken);
 
             if (entity is null)
             {
-                throw new ObjectNotFoundException($"Запись в истории с id {unit.Id} не найдена");
+                throw new ObjectNotFoundException(
+                    $"Запись в истории с id {unit.Id} не найдена");
             }
 
             entity.Amount = unit.Amount;
@@ -82,7 +89,8 @@ namespace Minibank.Data.MoneyTransferHistoryUnits.Repositories
         public async Task DeleteAsync(string id, CancellationToken cancellationToken)
         {
             var entity = await _context.HistoryUnits
-                .FirstOrDefaultAsync(it => it.Id.ToString() == id, cancellationToken);
+                .FirstOrDefaultAsync(it => 
+                    it.Id.ToString() == id, cancellationToken);
 
             if (entity is null)
             {

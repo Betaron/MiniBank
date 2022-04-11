@@ -15,20 +15,23 @@ namespace Minibank.Data
             _httpClient = httpClient;
         }
 
-        public async Task<double> GetExchangeRateAsync(CurrencyType currencyCode, CancellationToken cancellationToken)
+        public async Task<double> GetExchangeRateAsync(
+            CurrencyType currencyCode, CancellationToken cancellationToken)
         {
             if (currencyCode.ToString().Equals("RUB"))
             {
                 return 1.0;
             }
 
-            var response = await _httpClient.GetFromJsonAsync<CourseResponse>("daily_json.js", cancellationToken);
+            var response = await _httpClient.GetFromJsonAsync<CourseResponse>(
+                "daily_json.js", cancellationToken);
 
-            var currencyValidity = response?.Valute.ContainsKey(currencyCode.ToString()) ?? false;
+            var currencyValidity = 
+                response?.Valute.ContainsKey(currencyCode.ToString()) ?? false;
 
             if (!currencyValidity)
             {
-                throw new ValidationException(validationMessage: $"Курс [{currencyCode}] недоступен");
+                throw new ValidationException($"Курс [{currencyCode}] недоступен");
             }
 
             return response.Valute[currencyCode.ToString()].Value;
