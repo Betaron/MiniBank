@@ -1,4 +1,4 @@
-﻿namespace Minibank.Core.Domains.Users.Validators
+﻿namespace Minibank.Core.Utility
 {
     internal static class ValidationMessages
     {

@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Minibank.Core.Domains.BankAccounts.Repositories;
 using Minibank.Core.Domains.Users.Repositories;
+using Minibank.Core.Domains.Users.Validators;
 using ValidationException = Minibank.Core.Exceptions.ValidationException;
 
 namespace Minibank.Core.Domains.Users.Services
@@ -10,10 +11,10 @@ namespace Minibank.Core.Domains.Users.Services
         private readonly IUserRepository _userRepository;
         private readonly IBankAccountRepository _accountRepository;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IValidator<User> _userValidator;
+        private readonly EmptyFieldsValidator _userValidator;
 
         public UserService(IUserRepository userRepository, IBankAccountRepository accountRepository,
-            IUnitOfWork unitOfWork, IValidator<User> userValidator)
+            IUnitOfWork unitOfWork, EmptyFieldsValidator userValidator)
         {
             _userRepository = userRepository;
             _accountRepository = accountRepository;
