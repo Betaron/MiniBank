@@ -43,10 +43,17 @@
         Task DeleteAsync(string id, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Looking for a specific user
+        /// Looking for a specific user by Id
         /// </summary>
         /// <param name="id">User identification number</param>
         /// <returns>True if user exists</returns>
-        Task<bool> UserExistsAsync(string id, CancellationToken cancellationToken);
+        Task<bool> UserExistsByIdAsync(string id, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Looking for a specific user by login
+        /// </summary>
+        /// <param name="id">User identification number</param>
+        /// <returns>True if user exists</returns>
+        Task<bool> UserExistsByLoginAsync(string login, CancellationToken cancellationToken);
     }
 }

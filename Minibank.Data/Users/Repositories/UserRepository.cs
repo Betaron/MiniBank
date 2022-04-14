@@ -86,10 +86,16 @@ namespace Minibank.Data.Users.Repositories
             _context.Users.Remove(entity);
         }
 
-        public Task<bool> UserExistsAsync(string id, CancellationToken cancellationToken)
+        public Task<bool> UserExistsByIdAsync(string id, CancellationToken cancellationToken)
         {
             return _context.Users.AnyAsync(it =>
                 it.Id.ToString() == id, cancellationToken);
+        }
+
+        public Task<bool> UserExistsByLoginAsync(string login, CancellationToken cancellationToken)
+        {
+            return _context.Users.AnyAsync(it =>
+                it.Login == login, cancellationToken);
         }
     }
 }
