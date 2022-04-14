@@ -58,9 +58,9 @@ namespace Minibank.Web.Controllers.Users
         /// <param name="model">Template user</param>
         /// <param name="cancellationToken"></param>
         [HttpPost]
-        public async Task Create(CreateUserDto model, CancellationToken cancellationToken)
+        public Task Create(CreateUserDto model, CancellationToken cancellationToken)
         {
-            await _userService.CreateAsync(new User
+            return _userService.CreateAsync(new User
             {
                 Login = model.Login,
                 Email = model.Email
@@ -72,10 +72,10 @@ namespace Minibank.Web.Controllers.Users
         /// </summary>
         /// <param name="model">User to be changed</param>
         [HttpPut("{id}")]
-        public async Task Update(
+        public Task Update(
             string id, UpdateUserDto model, CancellationToken cancellationToken)
         {
-            await _userService.UpdateAsync(new User
+            return _userService.UpdateAsync(new User
             {
                 Id = id,
                 Login = model.Login,
@@ -88,9 +88,9 @@ namespace Minibank.Web.Controllers.Users
         /// </summary>
         /// <param name="id">User identification number</param>
         [HttpDelete("{id}")]
-        public async Task Delete(string id, CancellationToken cancellationToken)
+        public Task Delete(string id, CancellationToken cancellationToken)
         {
-            await _userService.DeleteAsync(id, cancellationToken);
+            return _userService.DeleteAsync(id, cancellationToken);
         }
     }
 }

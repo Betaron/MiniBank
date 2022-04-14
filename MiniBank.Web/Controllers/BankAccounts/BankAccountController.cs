@@ -89,9 +89,9 @@ namespace Minibank.Web.Controllers.BankAccounts
         /// </summary>
         /// <param name="model">Template bank account</param>
         [HttpPost]
-        public async Task Create(CreateBankAccountDto model, CancellationToken cancellationToken)
+        public Task Create(CreateBankAccountDto model, CancellationToken cancellationToken)
         {
-            await _bankAccountService.CreateAsync(new BankAccount
+            return _bankAccountService.CreateAsync(new BankAccount
             {
                 UserId = model.UserId,
                 Currency = model.Currency
@@ -103,10 +103,10 @@ namespace Minibank.Web.Controllers.BankAccounts
         /// </summary>
         /// <param name="model">Bank account to be changed</param>
         [HttpPut("{id}")]
-        public async Task Update(
+        public  Task Update(
             string id, UpdateBankAccountDto model, CancellationToken cancellationToken)
         {
-            await _bankAccountService.UpdateAsync(new BankAccount
+            return _bankAccountService.UpdateAsync(new BankAccount
             {
                 Id = id,
                 UserId = model.UserId,
@@ -119,9 +119,9 @@ namespace Minibank.Web.Controllers.BankAccounts
         /// </summary>
         /// <param name="id">Bank account identification number</param>
         [HttpDelete("{id}")]
-        public async Task Delete(string id, CancellationToken cancellationToken)
+        public Task Delete(string id, CancellationToken cancellationToken)
         {
-            await _bankAccountService.DeleteAsync(id, cancellationToken);
+            return _bankAccountService.DeleteAsync(id, cancellationToken);
         }
 
         /// <summary>
@@ -129,9 +129,9 @@ namespace Minibank.Web.Controllers.BankAccounts
         /// </summary>
         /// <param name="id">Bank account identification number</param>
         [HttpPost("close/{id}")]
-        public async Task CloseAccount(string id, CancellationToken cancellationToken)
+        public Task CloseAccount(string id, CancellationToken cancellationToken)
         {
-            await _bankAccountService.CloseAccountAsync(id, cancellationToken);
+            return _bankAccountService.CloseAccountAsync(id, cancellationToken);
         }
 
         /// <summary>
@@ -140,10 +140,10 @@ namespace Minibank.Web.Controllers.BankAccounts
         /// <param name="id">Bank account identification number</param>
         /// <param name="amount">New account balance</param>
         [HttpPatch("balance/{id}/{amount}")]
-        public async Task UpdateBalance(
+        public Task UpdateBalance(
             string id, double amount, CancellationToken cancellationToken)
         {
-            await _bankAccountService.UpdateBalanceAsync(id, amount, cancellationToken);
+            return _bankAccountService.UpdateBalanceAsync(id, amount, cancellationToken);
         }
 
         /// <summary>
@@ -165,13 +165,13 @@ namespace Minibank.Web.Controllers.BankAccounts
         /// Transferring funds between accounts
         /// </summary>
         [HttpGet("/transaction/{fromAccountId}/{toAccountId}/{amount}")]
-        public async Task MoneyTransaction(
+        public Task MoneyTransaction(
             double amount, 
             string fromAccountId, 
             string toAccountId, 
             CancellationToken cancellationToken)
         {
-            await _bankAccountService.MoneyTransactAsync(
+            return _bankAccountService.MoneyTransactAsync(
                 amount, fromAccountId, toAccountId, cancellationToken);
         }
     }
