@@ -19,12 +19,12 @@ namespace Minibank.Data
             services.AddHttpClient<ICurrencyHttpProvider, CurrencyHttpProvider>(options =>
             {
                 options.BaseAddress =
-                    new Uri(configuration["ConnectionStrings:CbrDaily"]);
+                    new Uri(configuration["ExternalServices:ExchangeRateService"]);
             });
 
             services.AddDbContext<MinibankContext>(options =>
             {
-                options.UseNpgsql(configuration["ConnectionStrings:MinibankDb"]);
+                options.UseNpgsql(configuration["Databases:PostgreSql"]);
                 options.UseSnakeCaseNamingConvention();
             });
 
