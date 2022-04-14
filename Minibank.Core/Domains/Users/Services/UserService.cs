@@ -62,15 +62,12 @@ namespace Minibank.Core.Domains.Users.Services
         private async Task AccountExistenceValidateAndThrowAsync(
             string id, CancellationToken cancellationToken)
         {
-            var allAccountsQuery = 
-                await _accountRepository.GetAllAsync(cancellationToken);
-            var hasAccounts = 
-                allAccountsQuery.ToList().Exists(it => it.UserId == id);
-
+            var hasAccounts = await _accountRepository.ExistsByUserIdAsync(id, cancellationToken);
+            
             if (hasAccounts)
             {
                 throw new ValidationException(
-                    "Есть привязанные банковские аккаунты");
+                    $"У пользователя с id: {id} есть привязанные банковские аккаунты");
             }
         }
     }

@@ -47,6 +47,6 @@
         /// </summary>
         /// <param name="id">User identification number</param>
         /// <returns>True if user exists</returns>
-        Task<bool> ExistsAsync(string id, CancellationToken cancellationToken);
+        Task<bool> UserExistsAsync(string id, CancellationToken cancellationToken);
     }
 }

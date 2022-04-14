@@ -147,5 +147,11 @@ namespace Minibank.Data.BankAccounts.Repositories
 
             entity.AccountBalance = amount;
         }
+
+        public Task<bool> ExistsByUserIdAsync(string id, CancellationToken cancellationToken)
+        {
+            var guidId = Guid.Parse(id);
+            return _context.Accounts.AnyAsync(it => it.UserId == guidId, cancellationToken);
+        }
     }
 }

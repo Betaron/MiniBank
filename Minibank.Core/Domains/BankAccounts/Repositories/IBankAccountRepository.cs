@@ -67,5 +67,12 @@
         /// </summary>
         /// <param name="amount">New account balance</param>
         Task UpdateBalanceAsync(string id, double amount, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Looks for the first available account from the transferred user
+        /// </summary>
+        /// <param name="userId">user identification number</param>
+        /// <returns>True if at least one account exists</returns>
+        Task<bool> ExistsByUserIdAsync(string userId, CancellationToken cancellationToken);
     }
 }

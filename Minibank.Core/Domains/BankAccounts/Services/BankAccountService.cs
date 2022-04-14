@@ -209,7 +209,7 @@ namespace Minibank.Core.Domains.BankAccounts.Services
 
         private async Task FindUserValidateAndThrowAsync(string userId, CancellationToken cancellationToken)
         {
-            var isUserExists = await _userRepository.ExistsAsync(userId, cancellationToken);
+            var isUserExists = await _userRepository.UserExistsAsync(userId, cancellationToken);
 
             if (!isUserExists)
             {
