@@ -8,9 +8,9 @@ namespace Minibank.Core.Domains.BankAccounts.Validators
         public BankAccountValidator()
         {
             RuleFor(x => x.UserId).NotEmpty()
-                .WithMessage($"{ValidationMessages.EmptyField}");
+                .WithMessage(ValidationMessages.EmptyField);
             RuleFor(x => x.Currency).IsInEnum()
-                .WithMessage($"{ValidationMessages.EmptyField}");
+                .WithMessage(ValidationMessages.EmptyField);
         }
     }
 }
