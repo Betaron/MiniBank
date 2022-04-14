@@ -15,7 +15,7 @@ namespace Minibank.Core.Domains.BankAccounts.Services
         private readonly IUnitOfWork _unitOfWork;
 
         private readonly FindUserValidator _findUserValidator;
-        private readonly EmptyFieldsValidator _emptyFieldsValidator;
+        private readonly BankAccountValidator _emptyFieldsValidator;
 
         public BankAccountService(
             IBankAccountRepository bankAccountRepository, 
@@ -23,7 +23,7 @@ namespace Minibank.Core.Domains.BankAccounts.Services
             ICurrencyConverter currencyConverter,
             IUnitOfWork unitOfWork, 
             FindUserValidator findUserValidator, 
-            EmptyFieldsValidator emptyFieldsValidator)
+            BankAccountValidator emptyFieldsValidator)
         {
             _bankAccountRepository = bankAccountRepository;
             _historyRepository = historyRepository;

@@ -3,9 +3,9 @@ using Minibank.Core.Utility;
 
 namespace Minibank.Core.Domains.Users.Validators
 {
-    public class EmptyFieldsValidator : AbstractValidator<User>
+    public class UserValidator : AbstractValidator<User>
     {
-        public EmptyFieldsValidator()
+        public UserValidator()
         {
             RuleFor(x => x.Login).NotEmpty()
                 .WithMessage(ValidationMessages.EmptyField);

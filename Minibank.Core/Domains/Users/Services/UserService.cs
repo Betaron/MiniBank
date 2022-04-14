@@ -11,13 +11,13 @@ namespace Minibank.Core.Domains.Users.Services
         private readonly IUserRepository _userRepository;
         private readonly IBankAccountRepository _accountRepository;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly EmptyFieldsValidator _userValidator;
+        private readonly UserValidator _userValidator;
 
         public UserService(
             IUserRepository userRepository, 
             IBankAccountRepository accountRepository,
             IUnitOfWork unitOfWork, 
-            EmptyFieldsValidator userValidator)
+            UserValidator userValidator)
         {
             _userRepository = userRepository;
             _accountRepository = accountRepository;
