@@ -3,6 +3,7 @@ using Minibank.Core.Domains.BankAccounts.Repositories;
 using Minibank.Core.Domains.BankAccounts.Validators;
 using Minibank.Core.Domains.MoneyTransferHistoryUnits;
 using Minibank.Core.Domains.MoneyTransferHistoryUnits.Repositories;
+using Minibank.Core.Domains.Users.Repositories;
 using ValidationException = Minibank.Core.Exceptions.ValidationException;
 
 namespace Minibank.Core.Domains.BankAccounts.Services
@@ -11,25 +12,25 @@ namespace Minibank.Core.Domains.BankAccounts.Services
     {
         private readonly IBankAccountRepository _bankAccountRepository;
         private readonly IMoneyTransferHistoryUnitRepository _historyRepository;
+        private readonly IUserRepository _userRepository; 
         private readonly ICurrencyConverter _currencyConverter;
         private readonly IUnitOfWork _unitOfWork;
 
-        private readonly FindUserValidator _findUserValidator;
         private readonly BankAccountValidator _emptyFieldsValidator;
 
         public BankAccountService(
             IBankAccountRepository bankAccountRepository, 
             IMoneyTransferHistoryUnitRepository historyRepository, 
+            IUserRepository userRepository,
             ICurrencyConverter currencyConverter,
-            IUnitOfWork unitOfWork, 
-            FindUserValidator findUserValidator, 
+            IUnitOfWork unitOfWork,
             BankAccountValidator emptyFieldsValidator)
         {
             _bankAccountRepository = bankAccountRepository;
             _historyRepository = historyRepository;
             _unitOfWork = unitOfWork;
-            _findUserValidator = findUserValidator;
             _emptyFieldsValidator = emptyFieldsValidator;
+            _userRepository = userRepository;
             _currencyConverter = currencyConverter;
         }
 
@@ -41,9 +42,7 @@ namespace Minibank.Core.Domains.BankAccounts.Services
         public async Task<IEnumerable<BankAccount>> GetByUserIdAsync(
             string userId, CancellationToken cancellationToken)
         {
-            await _findUserValidator.ValidateAndThrowAsync(
-                new BankAccount() {UserId = userId}, 
-                cancellationToken);
+            await FindUserValidateAndThrowAsync(userId, cancellationToken);
             
             return await _bankAccountRepository.GetByUserIdAsync(userId, cancellationToken);
         }
@@ -56,7 +55,7 @@ namespace Minibank.Core.Domains.BankAccounts.Services
         public async Task CreateAsync(BankAccount account, CancellationToken cancellationToken)
         {
             await _emptyFieldsValidator.ValidateAndThrowAsync(account, cancellationToken);
-            await _findUserValidator.ValidateAndThrowAsync(account, cancellationToken);
+            await FindUserValidateAndThrowAsync(account.UserId, cancellationToken);
 
             await _bankAccountRepository.CreateAsync(account, cancellationToken);
             await _unitOfWork.SaveChangesAsync();
@@ -205,6 +204,16 @@ namespace Minibank.Core.Domains.BankAccounts.Services
             {
                 throw new ValidationException(
                     $"Недостаточно средств на счёте - {fromAccount.Id}");
+            }
+        }
+
+        private async Task FindUserValidateAndThrowAsync(string userId, CancellationToken cancellationToken)
+        {
+            var isUserExists = await _userRepository.ExistsAsync(userId, cancellationToken);
+
+            if (!isUserExists)
+            {
+                throw new ValidationException($"Пользователь с id: {userId} не найден");
             }
         }
     }
