@@ -22,7 +22,7 @@ namespace Minibank.Web.Controllers.MoneyTransferHistoryUnits
         /// <param name="id">Money transfer history unit identification number</param>
         /// <returns>Found money transfer history unit</returns>
         [HttpGet("{id}")]
-        public async Task<HistoryUnitDto> GetById(string id, CancellationToken cancellationToken)
+        public async Task<HistoryUnitDto> GetById(Guid id, CancellationToken cancellationToken)
         {
             var model = await _historyService.GetByIdAsync(id, cancellationToken);
 
@@ -60,9 +60,9 @@ namespace Minibank.Web.Controllers.MoneyTransferHistoryUnits
         /// </summary>
         /// <param name="model">Template money transfer history unit</param>
         [HttpPost]
-        public async Task Create(CreateHistoryUnitDto model, CancellationToken cancellationToken)
+        public Task Create(CreateHistoryUnitDto model, CancellationToken cancellationToken)
         {
-            await _historyService.CreateAsync(new MoneyTransferHistoryUnit
+            return _historyService.CreateAsync(new MoneyTransferHistoryUnit
             {
                 Amount = model.Amount,
                 Currency = model.Currency,
@@ -77,10 +77,10 @@ namespace Minibank.Web.Controllers.MoneyTransferHistoryUnits
         /// </summary>
         /// <param name="model">Money transfer history unit to be changed</param>
         [HttpPut("{id}")]
-        public async Task Update(
-            string id, UpdateHistoryUnitDto model, CancellationToken cancellationToken)
+        public Task Update(
+            Guid id, UpdateHistoryUnitDto model, CancellationToken cancellationToken)
         {
-            await _historyService.UpdateAsync(new MoneyTransferHistoryUnit
+            return _historyService.UpdateAsync(new MoneyTransferHistoryUnit
             {
                 Id = id,
                 Amount = model.Amount,
@@ -95,9 +95,9 @@ namespace Minibank.Web.Controllers.MoneyTransferHistoryUnits
         /// </summary>
         /// <param name="id">Money transfer history unit identification number</param>
         [HttpDelete("{id}")]
-        public async Task Delete(string id, CancellationToken cancellationToken)
+        public Task Delete(Guid id, CancellationToken cancellationToken)
         {
-            await _historyService.DeleteAsync(id, cancellationToken);
+            return _historyService.DeleteAsync(id, cancellationToken);
         }
     }
 }

@@ -4,7 +4,7 @@ namespace Minibank.Web.Controllers.BankAccounts.Dto
 {
     public class UpdateBankAccountDto
     {
-        public string UserId { get; set; }
+        public Guid UserId { get; set; }
         public CurrencyType Currency { get; set; }
     }
 }

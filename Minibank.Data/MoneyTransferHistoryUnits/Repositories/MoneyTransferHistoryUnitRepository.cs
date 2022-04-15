@@ -15,11 +15,11 @@ namespace Minibank.Data.MoneyTransferHistoryUnits.Repositories
         }
 
         public async Task<MoneyTransferHistoryUnit> GetByIdAsync(
-            string id, CancellationToken cancellationToken)
+            Guid id, CancellationToken cancellationToken)
         {
             var entity = await _context.HistoryUnits.AsNoTracking()
                 .FirstOrDefaultAsync(it => 
-                    it.Id.ToString() == id, cancellationToken);
+                    it.Id == id, cancellationToken);
 
             if (entity is null)
             {
@@ -28,11 +28,11 @@ namespace Minibank.Data.MoneyTransferHistoryUnits.Repositories
 
             return new MoneyTransferHistoryUnit
             {
-                Id = entity.Id.ToString(),
+                Id = entity.Id,
                 Amount = entity.Amount,
                 Currency = entity.Currency,
-                FromAccountId = entity.FromAccountId.ToString(),
-                ToAccountId = entity.ToAccountId.ToString()
+                FromAccountId = entity.FromAccountId,
+                ToAccountId = entity.ToAccountId
             };
         }
 
@@ -42,11 +42,11 @@ namespace Minibank.Data.MoneyTransferHistoryUnits.Repositories
             var data = _context.HistoryUnits.AsNoTracking()
                 .Select(it => new MoneyTransferHistoryUnit
             {
-                Id = it.Id.ToString(),
+                Id = it.Id,
                 Amount = it.Amount,
                 Currency = it.Currency,
-                FromAccountId = it.FromAccountId.ToString(),
-                ToAccountId = it.ToAccountId.ToString()
+                FromAccountId = it.FromAccountId,
+                ToAccountId = it.ToAccountId
             });
 
             return await data.ToListAsync(cancellationToken);
@@ -60,8 +60,8 @@ namespace Minibank.Data.MoneyTransferHistoryUnits.Repositories
                 Id = Guid.NewGuid(),
                 Amount = unit.Amount,
                 Currency = unit.Currency,
-                FromAccountId = Guid.Parse(unit.FromAccountId),
-                ToAccountId = Guid.Parse(unit.ToAccountId)
+                FromAccountId = unit.FromAccountId,
+                ToAccountId = unit.ToAccountId
             };
 
             await _context.HistoryUnits.AddAsync(entity, cancellationToken);
@@ -72,7 +72,7 @@ namespace Minibank.Data.MoneyTransferHistoryUnits.Repositories
         {
             var entity = await _context.HistoryUnits
                 .FirstOrDefaultAsync(it => 
-                    it.Id.ToString() == unit.Id, cancellationToken);
+                    it.Id == unit.Id, cancellationToken);
 
             if (entity is null)
             {
@@ -82,15 +82,15 @@ namespace Minibank.Data.MoneyTransferHistoryUnits.Repositories
 
             entity.Amount = unit.Amount;
             entity.Currency = unit.Currency;
-            entity.FromAccountId = Guid.Parse(unit.FromAccountId);
-            entity.ToAccountId = Guid.Parse(unit.ToAccountId);
+            entity.FromAccountId = unit.FromAccountId;
+            entity.ToAccountId = unit.ToAccountId;
         }
 
-        public async Task DeleteAsync(string id, CancellationToken cancellationToken)
+        public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
             var entity = await _context.HistoryUnits
                 .FirstOrDefaultAsync(it => 
-                    it.Id.ToString() == id, cancellationToken);
+                    it.Id == id, cancellationToken);
 
             if (entity is null)
             {

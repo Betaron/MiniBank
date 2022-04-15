@@ -7,7 +7,7 @@
         /// </summary>
         /// <param name="id">User identification number</param>
         /// <returns>Found user</returns>
-        Task<User> GetByIdAsync(string id, CancellationToken cancellationToken);
+        Task<User> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
         /// <returns>All users from repository</returns>
         Task<IEnumerable<User>> GetAllAsync(CancellationToken cancellationToken);
@@ -29,6 +29,6 @@
         /// Deletes a user by id
         /// </summary>
         /// <param name="id">User identification number</param>
-        Task DeleteAsync(string id, CancellationToken cancellationToken);
+        Task DeleteAsync(Guid id, CancellationToken cancellationToken);
     }
 }

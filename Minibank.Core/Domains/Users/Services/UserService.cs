@@ -11,13 +11,13 @@ namespace Minibank.Core.Domains.Users.Services
         private readonly IUserRepository _userRepository;
         private readonly IBankAccountRepository _accountRepository;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly EmptyFieldsValidator _userValidator;
+        private readonly UserValidator _userValidator;
 
         public UserService(
             IUserRepository userRepository, 
             IBankAccountRepository accountRepository,
             IUnitOfWork unitOfWork, 
-            EmptyFieldsValidator userValidator)
+            UserValidator userValidator)
         {
             _userRepository = userRepository;
             _accountRepository = accountRepository;
@@ -25,7 +25,7 @@ namespace Minibank.Core.Domains.Users.Services
             _userValidator = userValidator;
         }
 
-        public Task<User> GetByIdAsync(string id, CancellationToken cancellationToken)
+        public Task<User> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
             return _userRepository.GetByIdAsync(id, cancellationToken);
         }
@@ -51,7 +51,7 @@ namespace Minibank.Core.Domains.Users.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(string id, CancellationToken cancellationToken)
+        public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
             await AccountExistenceValidateAndThrowAsync(id, cancellationToken);
 
@@ -60,17 +60,14 @@ namespace Minibank.Core.Domains.Users.Services
         }
 
         private async Task AccountExistenceValidateAndThrowAsync(
-            string id, CancellationToken cancellationToken)
+            Guid id, CancellationToken cancellationToken)
         {
-            var allAccountsQuery = 
-                await _accountRepository.GetAllAsync(cancellationToken);
-            var hasAccounts = 
-                allAccountsQuery.ToList().Exists(it => it.UserId == id);
-
+            var hasAccounts = await _accountRepository.ExistsByUserIdAsync(id, cancellationToken);
+            
             if (hasAccounts)
             {
                 throw new ValidationException(
-                    "Есть привязанные банковские аккаунты");
+                    $"У пользователя с id: {id} есть привязанные банковские аккаунты");
             }
         }
     }
