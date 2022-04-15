@@ -7,59 +7,59 @@
         /// </summary>
         /// <param name="id">Bank account identification number</param>
         /// <returns>Found Bank account</returns>
-        BankAccount GetById(string id);
+        Task<BankAccount> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
         /// <summary>
         /// Searches for a bank account by user id
         /// </summary>
         /// <param name="userId">User identification number</param>
         /// <returns>Found bank accounts</returns>
-        IEnumerable<BankAccount> GetByUserId(string userId);
+        Task<IEnumerable<BankAccount>> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken);
 
         /// <returns>All bank accounts from repository</returns>
-        IEnumerable<BankAccount> GetAll();
+        Task<IEnumerable<BankAccount>> GetAllAsync(CancellationToken cancellationToken);
 
         /// <summary>
         /// Adds a new bank account to the repository. Copies an argument
         /// </summary>
         /// <param name="account">Template bank account</param>
-        void Create(BankAccount account);
+        Task CreateAsync(BankAccount account, CancellationToken cancellationToken);
 
         /// <summary>
         /// Searches the repository for a bank account by id
         /// and changes based on the passed
         /// </summary>
         /// <param name="account">Bank account to be changed</param>
-        void Update(BankAccount account);
+        Task UpdateAsync(BankAccount account, CancellationToken cancellationToken);
 
         /// <summary>
         /// Deletes a bank account by id
         /// </summary>
         /// <param name="id">Bank account identification number</param>
-        void Delete(string id);
+        Task DeleteAsync(Guid id, CancellationToken cancellationToken);
 
         /// <summary>
         /// Makes an account inactive and sets a closing date
         /// </summary>
         /// <param name="id">Bank account identification number</param>
-        void CloseAccount(string id);
+        Task CloseAccountAsync(Guid id, CancellationToken cancellationToken);
 
         /// <summary>
         /// Changes account balance
         /// </summary>
         /// <param name="id">Bank account identification number</param>
         /// <param name="amount">New account balance</param>
-        void UpdateBalance(string id, double amount);
+        Task UpdateBalanceAsync(Guid id, double amount, CancellationToken cancellationToken);
 
         /// <summary>
         /// Calculates the commission amount when transferring between two accounts
         /// </summary>
         /// <returns>Commission amount</returns>
-        double CalculateCommission(double amount, string fromAccountId, string toAccountId);
+        Task<double> CalculateCommissionAsync(double amount, Guid fromAccountId, Guid toAccountId, CancellationToken cancellationToken);
 
         /// <summary>
         /// Transferring funds between accounts
         /// </summary>
-        void MoneyTransaction(double amount, string fromAccountId, string toAccountId);
+        Task MoneyTransactAsync(double amount, Guid fromAccountId, Guid toAccountId, CancellationToken cancellationToken);
     }
 }

@@ -5,35 +5,46 @@ namespace Minibank.Core.Domains.MoneyTransferHistoryUnits.Services
     public class MoneyTransferHistoryUnitService : IMoneyTransferHistoryUnitService
     {
         private readonly IMoneyTransferHistoryUnitRepository _historyRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public MoneyTransferHistoryUnitService(IMoneyTransferHistoryUnitRepository historyRepository)
+        public MoneyTransferHistoryUnitService(
+            IMoneyTransferHistoryUnitRepository historyRepository, IUnitOfWork unitOfWork)
         {
             _historyRepository = historyRepository;
+            _unitOfWork = unitOfWork;
         }
 
-        public MoneyTransferHistoryUnit GetById(string id)
+        public Task<MoneyTransferHistoryUnit> GetByIdAsync(
+            Guid id, CancellationToken cancellationToken)
         {
-            return _historyRepository.GetById(id);
+            return _historyRepository.GetByIdAsync(id, cancellationToken);
         }
 
-        public IEnumerable<MoneyTransferHistoryUnit> GetAll()
+        public Task<IEnumerable<MoneyTransferHistoryUnit>> GetAllAsync(
+            CancellationToken cancellationToken)
         {
-            return _historyRepository.GetAll();
+            return _historyRepository.GetAllAsync(cancellationToken);
         }
 
-        public void Create(MoneyTransferHistoryUnit unit)
+        public async Task CreateAsync(
+            MoneyTransferHistoryUnit unit, CancellationToken cancellationToken)
         {
-            _historyRepository.Create(unit);
+            await _historyRepository.CreateAsync(unit, cancellationToken);
+            await _unitOfWork.SaveChangesAsync();
         }
 
-        public void Update(MoneyTransferHistoryUnit unit)
+        public async Task UpdateAsync(
+            MoneyTransferHistoryUnit unit, CancellationToken cancellationToken)
         {
-            _historyRepository.Update(unit);
+            await _historyRepository.UpdateAsync(unit, cancellationToken);
+            await _unitOfWork.SaveChangesAsync();
         }
 
-        public void Delete(string id)
+        public async Task DeleteAsync(
+            Guid id, CancellationToken cancellationToken)
         {
-            _historyRepository.Delete(id);
+            await _historyRepository.DeleteAsync(id, cancellationToken);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

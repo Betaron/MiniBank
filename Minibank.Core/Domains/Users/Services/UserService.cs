@@ -1,6 +1,8 @@
-﻿using Minibank.Core.Domains.BankAccounts.Repositories;
+﻿using FluentValidation;
+using Minibank.Core.Domains.BankAccounts.Repositories;
 using Minibank.Core.Domains.Users.Repositories;
-using Minibank.Core.Exceptions;
+using Minibank.Core.Domains.Users.Validators;
+using ValidationException = Minibank.Core.Exceptions.ValidationException;
 
 namespace Minibank.Core.Domains.Users.Services
 {
@@ -8,54 +10,65 @@ namespace Minibank.Core.Domains.Users.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IBankAccountRepository _accountRepository;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly UserValidator _userValidator;
 
-        public UserService(IUserRepository userRepository, IBankAccountRepository accountRepository)
+        public UserService(
+            IUserRepository userRepository, 
+            IBankAccountRepository accountRepository,
+            IUnitOfWork unitOfWork, 
+            UserValidator userValidator)
         {
             _userRepository = userRepository;
             _accountRepository = accountRepository;
+            _unitOfWork = unitOfWork;
+            _userValidator = userValidator;
         }
 
-        public User GetById(string id)
-        { 
-            return _userRepository.GetById(id);
-        }
-
-        public IEnumerable<User> GetAll()
+        public Task<User> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            return _userRepository.GetAll();
+            return _userRepository.GetByIdAsync(id, cancellationToken);
         }
 
-        public void Create(User user)
+        public Task<IEnumerable<User>> GetAllAsync(CancellationToken cancellationToken)
         {
-            if (user.Login is null || user.Email is null)
-            {
-                throw new ValidationException("Неверные данные");
-            }
+            return _userRepository.GetAllAsync(cancellationToken);
+        }
+
+        public async Task CreateAsync(User user, CancellationToken cancellationToken)
+        {
+            await _userValidator.ValidateAndThrowAsync(user, cancellationToken);
             
-            _userRepository.Create(user);
+            await _userRepository.CreateAsync(user, cancellationToken);
+            await _unitOfWork.SaveChangesAsync();
         }
 
-        public void Update(User user)
+        public async Task UpdateAsync(User user, CancellationToken cancellationToken)
         {
-            if (user.Login is null || user.Email is null)
-            {
-                throw new ValidationException("Неверные данные");
-            }
+            await _userValidator.ValidateAndThrowAsync(user, cancellationToken);
+
+            await _userRepository.UpdateAsync(user, cancellationToken);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
+        {
+            await AccountExistenceValidateAndThrowAsync(id, cancellationToken);
+
+            await _userRepository.DeleteAsync(id, cancellationToken);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        private async Task AccountExistenceValidateAndThrowAsync(
+            Guid id, CancellationToken cancellationToken)
+        {
+            var hasAccounts = await _accountRepository.ExistsByUserIdAsync(id, cancellationToken);
             
-            _userRepository.Update(user);
-        }
-
-        public void Delete(string id)
-        {
-            var hasAccounts = _accountRepository.GetAll().ToList().Exists(it =>
-                it.UserId == id);
-
             if (hasAccounts)
             {
-                throw new ValidationException("Есть привязанные банковские аккаунты");
+                throw new ValidationException(
+                    $"У пользователя с id: {id} есть привязанные банковские аккаунты");
             }
-
-            _userRepository.Delete(id);
         }
     }
 }

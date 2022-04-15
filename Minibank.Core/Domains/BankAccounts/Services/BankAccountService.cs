@@ -1,9 +1,10 @@
-﻿using Minibank.Core.Domains.BankAccounts.Enums;
+﻿using FluentValidation;
 using Minibank.Core.Domains.BankAccounts.Repositories;
+using Minibank.Core.Domains.BankAccounts.Validators;
 using Minibank.Core.Domains.MoneyTransferHistoryUnits;
 using Minibank.Core.Domains.MoneyTransferHistoryUnits.Repositories;
 using Minibank.Core.Domains.Users.Repositories;
-using Minibank.Core.Exceptions;
+using ValidationException = Minibank.Core.Exceptions.ValidationException;
 
 namespace Minibank.Core.Domains.BankAccounts.Services
 {
@@ -11,160 +12,209 @@ namespace Minibank.Core.Domains.BankAccounts.Services
     {
         private readonly IBankAccountRepository _bankAccountRepository;
         private readonly IMoneyTransferHistoryUnitRepository _historyRepository;
-        private readonly IUserRepository _userRepository;
+        private readonly IUserRepository _userRepository; 
         private readonly ICurrencyConverter _currencyConverter;
+        private readonly IUnitOfWork _unitOfWork;
+
+        private readonly BankAccountValidator _emptyFieldsValidator;
 
         public BankAccountService(
             IBankAccountRepository bankAccountRepository, 
             IMoneyTransferHistoryUnitRepository historyRepository, 
-            ICurrencyConverter currencyConverter, IUserRepository userRepository)
+            IUserRepository userRepository,
+            ICurrencyConverter currencyConverter,
+            IUnitOfWork unitOfWork,
+            BankAccountValidator emptyFieldsValidator)
         {
             _bankAccountRepository = bankAccountRepository;
             _historyRepository = historyRepository;
+            _unitOfWork = unitOfWork;
+            _emptyFieldsValidator = emptyFieldsValidator;
             _userRepository = userRepository;
             _currencyConverter = currencyConverter;
         }
 
-        public BankAccount GetById(string id)
+        public Task<BankAccount> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            return _bankAccountRepository.GetById(id); ;
+            return _bankAccountRepository.GetByIdAsync(id, cancellationToken);
         }
 
-        public IEnumerable<BankAccount> GetByUserId(string userId)
+        public async Task<IEnumerable<BankAccount>> GetByUserIdAsync(
+            Guid userId, CancellationToken cancellationToken)
         {
-            if (!_userRepository.Exists(userId))
-            {
-                throw new ObjectNotFoundException($"Пользователь с id {userId} не найден");
-            }
-
-            return _bankAccountRepository.GetByUserId(userId);
+            await FindUserValidateAndThrowAsync(userId, cancellationToken);
+            
+            return await _bankAccountRepository.GetByUserIdAsync(userId, cancellationToken);
         }
 
-        public IEnumerable<BankAccount> GetAll()
+        public Task<IEnumerable<BankAccount>> GetAllAsync(CancellationToken cancellationToken)
         {
-            return _bankAccountRepository.GetAll();
+            return _bankAccountRepository.GetAllAsync(cancellationToken);
         }
 
-        public void Create(BankAccount account)
+        public async Task CreateAsync(BankAccount account, CancellationToken cancellationToken)
         {
-            if (account.UserId is null)
-            {
-                throw new ValidationException("Неверные данные");
-            }
+            await _emptyFieldsValidator.ValidateAndThrowAsync(account, cancellationToken);
+            await FindUserValidateAndThrowAsync(account.UserId, cancellationToken);
 
-            if (!_userRepository.Exists(account.UserId))
-            {
-                throw new ObjectNotFoundException($"Пользователь с id {account.UserId} не найден");
-            }
-
-            _bankAccountRepository.Create(account);
+            await _bankAccountRepository.CreateAsync(account, cancellationToken);
+            await _unitOfWork.SaveChangesAsync();
         }
 
-        public void Update(BankAccount account)
+        public async Task UpdateAsync(BankAccount account, CancellationToken cancellationToken)
         {
-            if (account.UserId is null)
-            {
-                throw new ValidationException("Неверные данные");
-            }
+            await _emptyFieldsValidator.ValidateAsync(account, cancellationToken);
 
-            _bankAccountRepository.Update(account);
+            await _bankAccountRepository.UpdateAsync(account, cancellationToken);
+            await _unitOfWork.SaveChangesAsync();
         }
 
-        public void Delete(string id)
+        public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
-            var account = _bankAccountRepository.GetById(id);
+            var account = await _bankAccountRepository.GetByIdAsync(id, cancellationToken);
 
-            if (account.AccountBalance != 0)
-            {
-                throw new ValidationException("Баланс не нулевой");
-            }
+            HasNonZeroBalanceValidateAndThrow(account);
 
-            _bankAccountRepository.Delete(id);
+            await _bankAccountRepository.DeleteAsync(id, cancellationToken);
+            await _unitOfWork.SaveChangesAsync();
         }
 
-        public void CloseAccount(string id)
+        public async Task CloseAccountAsync(Guid id, CancellationToken cancellationToken)
         {
-            var account = _bankAccountRepository.GetById(id);
+            var account = await _bankAccountRepository.GetByIdAsync(id, cancellationToken);
 
-            if (account.AccountBalance != 0)
-            {
-                throw new ValidationException("Баланс не нулевой");
-            }
+            HasNonZeroBalanceValidateAndThrow(account);
 
-            if (account.IsActive && account.ClosingDate is not null)
-            {
-                throw new ValidationException("Аккаунт уже закрыт");
-            }
+            AccountInactiveValidateAndThrow(account);
 
-            _bankAccountRepository.CloseAccount(id);
+            await _bankAccountRepository.CloseAccountAsync(id, cancellationToken);
+            await _unitOfWork.SaveChangesAsync();
         }
 
-        public void UpdateBalance(string id, double amount)
+        public async Task UpdateBalanceAsync(
+            Guid id, double amount, CancellationToken cancellationToken)
         {
-            var account = _bankAccountRepository.GetById(id);
+            var account = await _bankAccountRepository.GetByIdAsync(id, cancellationToken);
 
-            if (!account.IsActive)
-            {
-                throw new ValidationException("Счёт закрыт");
-            }
+            AccountInactiveValidateAndThrow(account);
 
-            _bankAccountRepository.UpdateBalance(id, amount);
+            await _bankAccountRepository.UpdateBalanceAsync(id, amount, cancellationToken);
+            await _unitOfWork.SaveChangesAsync();
         }
 
-        public double CalculateCommission(double amount, string fromAccountId, string toAccountId)
+        public async Task<double> CalculateCommissionAsync(
+            double amount,
+            Guid fromAccountId,
+            Guid toAccountId, 
+            CancellationToken cancellationToken)
         {
-            if (amount < 1)
-            {
-                throw new ValidationException("Сумма слишком мала");
-            }
+            TransactionValueValidateAndThrow(amount);
 
-            var fromUser = _bankAccountRepository.GetById(fromAccountId);
-            var toUser = _bankAccountRepository.GetById(toAccountId);
+            var fromUser = 
+                await _bankAccountRepository.GetByIdAsync(fromAccountId, cancellationToken);
+            var toUser = 
+                await _bankAccountRepository.GetByIdAsync(toAccountId, cancellationToken);
 
             var commissionValue = fromUser.UserId != toUser.UserId ? 0.02 : 0.0;
 
             return Math.Round(amount * commissionValue, 2);
         }
 
-        public void MoneyTransaction(double amount, string fromAccountId, string toAccountId)
+        public async Task MoneyTransactAsync(
+            double amount,
+            Guid fromAccountId,
+            Guid toAccountId, 
+            CancellationToken cancellationToken)
         {
-            if (amount < 1)
-            {
-                throw new ValidationException("Сумма слишком мала");
-            }
+            TransactionValueValidateAndThrow(amount);
 
-            if (fromAccountId == toAccountId)
-            {
-                throw new ValidationException("Нельзя перевести средства на тот же счёт");
-            }
+            var fromAccount = 
+                await _bankAccountRepository.GetByIdAsync(fromAccountId, cancellationToken);
+            var toAccount = 
+                await _bankAccountRepository.GetByIdAsync(toAccountId, cancellationToken);
 
-            var fromAccount = _bankAccountRepository.GetById(fromAccountId);
-            var toAccount = _bankAccountRepository.GetById(toAccountId);
+            TransactionValidateAndThrow(amount, fromAccount, toAccount);
 
-            if (!fromAccount.IsActive || !toAccount.IsActive)
-            {
-                throw new ValidationException("Один из счетов неактивен");
-            }
+            var commissionValue = 
+                await CalculateCommissionAsync(amount, fromAccountId, toAccountId, cancellationToken);
+            var creditedAmount = 
+                await _currencyConverter.ConvertCurrencyAsync(
+                    amount - commissionValue, 
+                    fromAccount.Currency, 
+                    toAccount.Currency, 
+                    cancellationToken);
 
-            if (fromAccount.AccountBalance < amount)
-            {
-                throw new ValidationException("Недостаточно средств на счёте");
-                
-            }
+            await _bankAccountRepository.UpdateBalanceAsync(
+                fromAccountId,
+                fromAccount.AccountBalance - amount, 
+                cancellationToken);
+            await _bankAccountRepository.UpdateBalanceAsync(
+                toAccountId, 
+                toAccount.AccountBalance + creditedAmount, 
+                cancellationToken);
 
-            var commissionValue = CalculateCommission(amount, fromAccountId, toAccountId);
-            var creditedAmount = _currencyConverter.ConvertCurrency(amount - commissionValue, fromAccount.Currency, toAccount.Currency);
-
-            _bankAccountRepository.UpdateBalance(fromAccountId, fromAccount.AccountBalance - amount);
-            _bankAccountRepository.UpdateBalance(toAccountId, toAccount.AccountBalance + creditedAmount);
-
-            _historyRepository.Create(new MoneyTransferHistoryUnit
+            await _historyRepository.CreateAsync(new MoneyTransferHistoryUnit
             {
                 Currency = fromAccount.Currency,
                 Amount = amount,
                 FromAccountId = fromAccountId,
                 ToAccountId = toAccountId
-            });
+            }, cancellationToken);
+
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        private void AccountInactiveValidateAndThrow(BankAccount account)
+        {
+            if (!account.IsActive)
+            {
+                throw new ValidationException($"{account.Id} - аккаунт неактивен");
+            }
+        }
+
+        private void HasNonZeroBalanceValidateAndThrow(BankAccount account)
+        {
+            if (account.AccountBalance != 0)
+            {
+                throw new ValidationException($"Баланс не нулевой - {account.Id}");
+            }
+        }
+
+        private void TransactionValueValidateAndThrow(double amount)
+        {
+            if (amount <= 0)
+            {
+                throw new ValidationException("Сумма перевода должна превышать 0");
+            }
+        }
+
+        private void TransactionValidateAndThrow(
+            double amount, BankAccount fromAccount, BankAccount toAccount)
+        {
+            AccountInactiveValidateAndThrow(fromAccount);
+            AccountInactiveValidateAndThrow(toAccount);
+
+            if (fromAccount.Id == toAccount.Id)
+            {
+                throw new ValidationException(
+                    $"Нельзя перевести средства на тот же счёт - {fromAccount.Id}");
+            }
+
+            if (fromAccount.AccountBalance < amount)
+            {
+                throw new ValidationException(
+                    $"Недостаточно средств на счёте - {fromAccount.Id}");
+            }
+        }
+
+        private async Task FindUserValidateAndThrowAsync(Guid userId, CancellationToken cancellationToken)
+        {
+            var isUserExists = await _userRepository.UserExistsByIdAsync(userId, cancellationToken);
+
+            if (!isUserExists)
+            {
+                throw new ValidationException($"Пользователь с id: {userId} не найден");
+            }
         }
     }
 }

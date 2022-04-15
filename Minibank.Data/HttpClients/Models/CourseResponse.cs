@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Minibank.Data.HttpClients.Models
+﻿namespace Minibank.Data.HttpClients.Models
 {
     public class CourseResponse
     {

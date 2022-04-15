@@ -2,6 +2,7 @@
 using System.Text.Json.Serialization;
 using Minibank.Core;
 using Minibank.Data;
+using Minibank.Web.HostedServices;
 using Minibank.Web.Middlewares;
 
 namespace Minibank.Web
@@ -23,7 +24,8 @@ namespace Minibank.Web
             });
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v2", new Microsoft.OpenApi.Models.OpenApiInfo {Title = "MiniBank.Web", Version = "v2"});
+                c.SwaggerDoc("v3", new Microsoft.OpenApi.Models.OpenApiInfo 
+                    {Title = "MiniBank.Web", Version = "v3"});
                 var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
             });
@@ -31,6 +33,8 @@ namespace Minibank.Web
             services.
                 AddData(Configuration).
                 AddCore();
+
+            services.AddHostedService<MigrationHostedService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment environment)
@@ -41,7 +45,7 @@ namespace Minibank.Web
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint("/swagger/v2/swagger.json", "MiniBank.Web v2");
+                    c.SwaggerEndpoint("/swagger/v3/swagger.json", "MiniBank.Web v3");
                 });
             }
 

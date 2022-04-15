@@ -20,11 +20,12 @@ namespace Minibank.Web.Controllers.Users
         /// Searches for a user by his id
         /// </summary>
         /// <param name="id">User identification number</param>
+        /// <param name="cancellationToken"></param>
         /// <returns>Found user</returns>
         [HttpGet("{id}")]
-        public UserDto GetById(string id)
+        public async Task<UserDto> GetById(Guid id, CancellationToken cancellationToken)
         {
-            var model = _userService.GetById(id);
+            var model = await _userService.GetByIdAsync(id, cancellationToken);
 
             return new UserDto
             {
@@ -39,10 +40,11 @@ namespace Minibank.Web.Controllers.Users
         /// </summary>
         /// <returns>All users from repository</returns>
         [HttpGet]
-        public IEnumerable<UserDto> GetAll()
+        public async Task<IEnumerable<UserDto>> GetAll(CancellationToken cancellationToken)
         {
-            return _userService.GetAll()
-                .Select(it => new UserDto
+            var models = await _userService.GetAllAsync(cancellationToken);
+
+            return models.Select(it => new UserDto
                 {
                     Id = it.Id,
                     Login = it.Login,
@@ -54,14 +56,15 @@ namespace Minibank.Web.Controllers.Users
         /// Adds a new user
         /// </summary>
         /// <param name="model">Template user</param>
+        /// <param name="cancellationToken"></param>
         [HttpPost]
-        public void Create(CreateUserDto model)
+        public Task Create(CreateUserDto model, CancellationToken cancellationToken)
         {
-            _userService.Create(new User
+            return _userService.CreateAsync(new User
             {
                 Login = model.Login,
                 Email = model.Email
-            });
+            }, cancellationToken);
         }
 
         /// <summary>
@@ -69,14 +72,15 @@ namespace Minibank.Web.Controllers.Users
         /// </summary>
         /// <param name="model">User to be changed</param>
         [HttpPut("{id}")]
-        public void Update(string id, UpdateUserDto model)
+        public Task Update(
+            Guid id, UpdateUserDto model, CancellationToken cancellationToken)
         {
-            _userService.Update(new User
+            return _userService.UpdateAsync(new User
             {
                 Id = id,
                 Login = model.Login,
                 Email = model.Email
-            });
+            }, cancellationToken);
         }
 
         /// <summary>
@@ -84,9 +88,9 @@ namespace Minibank.Web.Controllers.Users
         /// </summary>
         /// <param name="id">User identification number</param>
         [HttpDelete("{id}")]
-        public void Delete(string id)
+        public Task Delete(Guid id, CancellationToken cancellationToken)
         {
-            _userService.Delete(id);
+            return _userService.DeleteAsync(id, cancellationToken);
         }
     }
 }
