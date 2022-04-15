@@ -7,7 +7,7 @@
         /// </summary>
         /// <param name="id">Money transfer history unit identification number</param>
         /// <returns>Found money transfer history unit</returns>
-        Task<MoneyTransferHistoryUnit> GetByIdAsync(string id, CancellationToken cancellationToken);
+        Task<MoneyTransferHistoryUnit> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
         /// <returns>All money transfer history unit from repository</returns>
         Task<IEnumerable<MoneyTransferHistoryUnit>> GetAllAsync(CancellationToken cancellationToken);
@@ -29,6 +29,6 @@
         /// Deletes a money transfer history unit by id
         /// </summary>
         /// <param name="id">Money transfer history unit identification number</param>
-        Task DeleteAsync(string id, CancellationToken cancellationToken);
+        Task DeleteAsync(Guid id, CancellationToken cancellationToken);
     }
 }

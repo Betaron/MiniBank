@@ -34,13 +34,13 @@ namespace Minibank.Core.Domains.BankAccounts.Services
             _currencyConverter = currencyConverter;
         }
 
-        public Task<BankAccount> GetByIdAsync(string id, CancellationToken cancellationToken)
+        public Task<BankAccount> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
             return _bankAccountRepository.GetByIdAsync(id, cancellationToken);
         }
 
         public async Task<IEnumerable<BankAccount>> GetByUserIdAsync(
-            string userId, CancellationToken cancellationToken)
+            Guid userId, CancellationToken cancellationToken)
         {
             await FindUserValidateAndThrowAsync(userId, cancellationToken);
             
@@ -69,7 +69,7 @@ namespace Minibank.Core.Domains.BankAccounts.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(string id, CancellationToken cancellationToken)
+        public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
             var account = await _bankAccountRepository.GetByIdAsync(id, cancellationToken);
 
@@ -79,7 +79,7 @@ namespace Minibank.Core.Domains.BankAccounts.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task CloseAccountAsync(string id, CancellationToken cancellationToken)
+        public async Task CloseAccountAsync(Guid id, CancellationToken cancellationToken)
         {
             var account = await _bankAccountRepository.GetByIdAsync(id, cancellationToken);
 
@@ -92,7 +92,7 @@ namespace Minibank.Core.Domains.BankAccounts.Services
         }
 
         public async Task UpdateBalanceAsync(
-            string id, double amount, CancellationToken cancellationToken)
+            Guid id, double amount, CancellationToken cancellationToken)
         {
             var account = await _bankAccountRepository.GetByIdAsync(id, cancellationToken);
 
@@ -103,9 +103,9 @@ namespace Minibank.Core.Domains.BankAccounts.Services
         }
 
         public async Task<double> CalculateCommissionAsync(
-            double amount, 
-            string fromAccountId, 
-            string toAccountId, 
+            double amount,
+            Guid fromAccountId,
+            Guid toAccountId, 
             CancellationToken cancellationToken)
         {
             TransactionValueValidateAndThrow(amount);
@@ -121,9 +121,9 @@ namespace Minibank.Core.Domains.BankAccounts.Services
         }
 
         public async Task MoneyTransactAsync(
-            double amount, 
-            string fromAccountId, 
-            string toAccountId, 
+            double amount,
+            Guid fromAccountId,
+            Guid toAccountId, 
             CancellationToken cancellationToken)
         {
             TransactionValueValidateAndThrow(amount);
@@ -207,7 +207,7 @@ namespace Minibank.Core.Domains.BankAccounts.Services
             }
         }
 
-        private async Task FindUserValidateAndThrowAsync(string userId, CancellationToken cancellationToken)
+        private async Task FindUserValidateAndThrowAsync(Guid userId, CancellationToken cancellationToken)
         {
             var isUserExists = await _userRepository.UserExistsByIdAsync(userId, cancellationToken);
 

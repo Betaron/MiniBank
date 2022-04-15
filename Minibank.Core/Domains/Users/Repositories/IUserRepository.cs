@@ -9,7 +9,7 @@
         /// </summary>
         /// <param name="id">User identification number</param>
         /// <returns>Found user</returns>
-        Task<User> GetByIdAsync(string id, CancellationToken cancellationToken);
+        Task<User> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
         ///<summary>
         /// <i>(You need to implement only the basic logic of working with the repository)</i>
@@ -40,14 +40,14 @@
         /// <i>(You need to implement only the basic logic of working with the repository)</i>
         /// </summary>
         /// <param name="id">User identification number</param>
-        Task DeleteAsync(string id, CancellationToken cancellationToken);
+        Task DeleteAsync(Guid id, CancellationToken cancellationToken);
 
         /// <summary>
         /// Looking for a specific user by Id
         /// </summary>
         /// <param name="id">User identification number</param>
         /// <returns>True if user exists</returns>
-        Task<bool> UserExistsByIdAsync(string id, CancellationToken cancellationToken);
+        Task<bool> UserExistsByIdAsync(Guid id, CancellationToken cancellationToken);
 
         /// <summary>
         /// Looking for a specific user by login

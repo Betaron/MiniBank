@@ -25,7 +25,7 @@ namespace Minibank.Core.Domains.Users.Services
             _userValidator = userValidator;
         }
 
-        public Task<User> GetByIdAsync(string id, CancellationToken cancellationToken)
+        public Task<User> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
             return _userRepository.GetByIdAsync(id, cancellationToken);
         }
@@ -51,7 +51,7 @@ namespace Minibank.Core.Domains.Users.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(string id, CancellationToken cancellationToken)
+        public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
             await AccountExistenceValidateAndThrowAsync(id, cancellationToken);
 
@@ -60,7 +60,7 @@ namespace Minibank.Core.Domains.Users.Services
         }
 
         private async Task AccountExistenceValidateAndThrowAsync(
-            string id, CancellationToken cancellationToken)
+            Guid id, CancellationToken cancellationToken)
         {
             var hasAccounts = await _accountRepository.ExistsByUserIdAsync(id, cancellationToken);
             

@@ -15,7 +15,7 @@ namespace Minibank.Core.Domains.MoneyTransferHistoryUnits.Services
         }
 
         public Task<MoneyTransferHistoryUnit> GetByIdAsync(
-            string id, CancellationToken cancellationToken)
+            Guid id, CancellationToken cancellationToken)
         {
             return _historyRepository.GetByIdAsync(id, cancellationToken);
         }
@@ -41,7 +41,7 @@ namespace Minibank.Core.Domains.MoneyTransferHistoryUnits.Services
         }
 
         public async Task DeleteAsync(
-            string id, CancellationToken cancellationToken)
+            Guid id, CancellationToken cancellationToken)
         {
             await _historyRepository.DeleteAsync(id, cancellationToken);
             await _unitOfWork.SaveChangesAsync();

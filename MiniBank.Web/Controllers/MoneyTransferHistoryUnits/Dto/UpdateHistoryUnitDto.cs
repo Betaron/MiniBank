@@ -6,7 +6,7 @@ namespace Minibank.Web.Controllers.MoneyTransferHistoryUnits.Dto
     {
         public double Amount { get; set; }
         public CurrencyType Currency { get; set; }
-        public string FromAccountId { get; set; }
-        public string ToAccountId { get; set; }
+        public Guid FromAccountId { get; set; }
+        public Guid ToAccountId { get; set; }
     }
 }

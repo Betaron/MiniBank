@@ -7,14 +7,14 @@
         /// </summary>
         /// <param name="id">Bank account identification number</param>
         /// <returns>Found Bank account</returns>
-        Task<BankAccount> GetByIdAsync(string id, CancellationToken cancellationToken);
+        Task<BankAccount> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
         /// <summary>
         /// Searches for a bank account by user id
         /// </summary>
         /// <param name="userId">User identification number</param>
         /// <returns>Found bank accounts</returns>
-        Task<IEnumerable<BankAccount>> GetByUserIdAsync(string userId, CancellationToken cancellationToken);
+        Task<IEnumerable<BankAccount>> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken);
 
         /// <returns>All bank accounts from repository</returns>
         Task<IEnumerable<BankAccount>> GetAllAsync(CancellationToken cancellationToken);
@@ -36,30 +36,30 @@
         /// Deletes a bank account by id
         /// </summary>
         /// <param name="id">Bank account identification number</param>
-        Task DeleteAsync(string id, CancellationToken cancellationToken);
+        Task DeleteAsync(Guid id, CancellationToken cancellationToken);
 
         /// <summary>
         /// Makes an account inactive and sets a closing date
         /// </summary>
         /// <param name="id">Bank account identification number</param>
-        Task CloseAccountAsync(string id, CancellationToken cancellationToken);
+        Task CloseAccountAsync(Guid id, CancellationToken cancellationToken);
 
         /// <summary>
         /// Changes account balance
         /// </summary>
         /// <param name="id">Bank account identification number</param>
         /// <param name="amount">New account balance</param>
-        Task UpdateBalanceAsync(string id, double amount, CancellationToken cancellationToken);
+        Task UpdateBalanceAsync(Guid id, double amount, CancellationToken cancellationToken);
 
         /// <summary>
         /// Calculates the commission amount when transferring between two accounts
         /// </summary>
         /// <returns>Commission amount</returns>
-        Task<double> CalculateCommissionAsync(double amount, string fromAccountId, string toAccountId, CancellationToken cancellationToken);
+        Task<double> CalculateCommissionAsync(double amount, Guid fromAccountId, Guid toAccountId, CancellationToken cancellationToken);
 
         /// <summary>
         /// Transferring funds between accounts
         /// </summary>
-        Task MoneyTransactAsync(double amount, string fromAccountId, string toAccountId, CancellationToken cancellationToken);
+        Task MoneyTransactAsync(double amount, Guid fromAccountId, Guid toAccountId, CancellationToken cancellationToken);
     }
 }

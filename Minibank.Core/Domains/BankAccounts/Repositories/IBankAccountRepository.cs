@@ -9,7 +9,7 @@
         /// </summary>
         /// <param name="id">Bank account identification number</param>
         /// <returns>Found Bank account</returns>
-        Task<BankAccount> GetByIdAsync(string id, CancellationToken cancellationToken);
+        Task<BankAccount> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
         /// <summary>
         /// Searches for a bank account by user id
@@ -18,7 +18,7 @@
         /// </summary>
         /// <param name="userId">User identification number</param>
         /// <returns>Found bank accounts</returns>
-        Task<IEnumerable<BankAccount>> GetByUserIdAsync(string userId, CancellationToken cancellationToken);
+        Task<IEnumerable<BankAccount>> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken);
 
         ///<summary>
         ///<br/>
@@ -50,7 +50,7 @@
         /// <i>(You need to implement only the basic logic of working with the repository)</i>
         /// </summary>
         /// <param name="id">Bank account identification number</param>
-        Task DeleteAsync(string id, CancellationToken cancellationToken);
+        Task DeleteAsync(Guid id, CancellationToken cancellationToken);
 
         /// <summary>
         /// Makes an account inactive and sets a closing date
@@ -58,7 +58,7 @@
         /// <i>(You need to implement only the basic logic of working with the repository)</i>
         /// </summary>
         /// <param name="id">Bank account identification number</param>
-        Task CloseAccountAsync(string id, CancellationToken cancellationToken);
+        Task CloseAccountAsync(Guid id, CancellationToken cancellationToken);
 
         /// <summary>
         /// Changes account balance
@@ -66,13 +66,13 @@
         /// <i>(You need to implement only the basic logic of working with the repository)</i>
         /// </summary>
         /// <param name="amount">New account balance</param>
-        Task UpdateBalanceAsync(string id, double amount, CancellationToken cancellationToken);
+        Task UpdateBalanceAsync(Guid id, double amount, CancellationToken cancellationToken);
 
         /// <summary>
         /// Looks for the first available account from the transferred user
         /// </summary>
         /// <param name="userId">user identification number</param>
         /// <returns>True if at least one account exists</returns>
-        Task<bool> ExistsByUserIdAsync(string userId, CancellationToken cancellationToken);
+        Task<bool> ExistsByUserIdAsync(Guid userId, CancellationToken cancellationToken);
     }
 }
