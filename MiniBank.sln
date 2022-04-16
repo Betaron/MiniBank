@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Minibank.Core", "Minibank.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Minibank.Data", "Minibank.Data\Minibank.Data.csproj", "{3B1DC244-3444-443F-803A-439731F44C01}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Minibank.Core.Tests", "Minibank.Core.Tests\Minibank.Core.Tests.csproj", "{05E95FC9-6697-4E39-932C-E596D7A68F73}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Minibank.Core.Tests", "Minibank.Core.Tests\Minibank.Core.Tests.csproj", "{05E95FC9-6697-4E39-932C-E596D7A68F73}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{26D602AF-6B0A-4FB6-B118-4E837036B327}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,6 +38,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{05E95FC9-6697-4E39-932C-E596D7A68F73} = {26D602AF-6B0A-4FB6-B118-4E837036B327}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9801B7B4-3657-4494-921A-0652F46BC7EC}
