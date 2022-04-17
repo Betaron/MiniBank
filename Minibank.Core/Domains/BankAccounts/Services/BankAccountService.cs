@@ -16,7 +16,7 @@ namespace Minibank.Core.Domains.BankAccounts.Services
         private readonly ICurrencyConverter _currencyConverter;
         private readonly IUnitOfWork _unitOfWork;
 
-        private readonly BankAccountValidator _emptyFieldsValidator;
+        private readonly BankAccountValidator _bankAccountValidator;
 
         public BankAccountService(
             IBankAccountRepository bankAccountRepository, 
@@ -24,12 +24,12 @@ namespace Minibank.Core.Domains.BankAccounts.Services
             IUserRepository userRepository,
             ICurrencyConverter currencyConverter,
             IUnitOfWork unitOfWork,
-            BankAccountValidator emptyFieldsValidator)
+            BankAccountValidator bankAccountValidator)
         {
             _bankAccountRepository = bankAccountRepository;
             _historyRepository = historyRepository;
             _unitOfWork = unitOfWork;
-            _emptyFieldsValidator = emptyFieldsValidator;
+            _bankAccountValidator = bankAccountValidator;
             _userRepository = userRepository;
             _currencyConverter = currencyConverter;
         }
@@ -54,7 +54,7 @@ namespace Minibank.Core.Domains.BankAccounts.Services
 
         public async Task CreateAsync(BankAccount account, CancellationToken cancellationToken)
         {
-            await _emptyFieldsValidator.ValidateAndThrowAsync(account, cancellationToken);
+            await _bankAccountValidator.ValidateAndThrowAsync(account, cancellationToken);
             await FindUserValidateAndThrowAsync(account.UserId, cancellationToken);
 
             await _bankAccountRepository.CreateAsync(account, cancellationToken);
@@ -63,7 +63,7 @@ namespace Minibank.Core.Domains.BankAccounts.Services
 
         public async Task UpdateAsync(BankAccount account, CancellationToken cancellationToken)
         {
-            await _emptyFieldsValidator.ValidateAsync(account, cancellationToken);
+            await _bankAccountValidator.ValidateAsync(account, cancellationToken);
 
             await _bankAccountRepository.UpdateAsync(account, cancellationToken);
             await _unitOfWork.SaveChangesAsync();
