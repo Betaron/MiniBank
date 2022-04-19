@@ -63,7 +63,7 @@ namespace Minibank.Core.Domains.BankAccounts.Services
 
         public async Task UpdateAsync(BankAccount account, CancellationToken cancellationToken)
         {
-            await _bankAccountValidator.ValidateAsync(account, cancellationToken);
+            await _bankAccountValidator.ValidateAndThrowAsync(account, cancellationToken);
 
             await _bankAccountRepository.UpdateAsync(account, cancellationToken);
             await _unitOfWork.SaveChangesAsync();
@@ -108,16 +108,16 @@ namespace Minibank.Core.Domains.BankAccounts.Services
             Guid toAccountId, 
             CancellationToken cancellationToken)
         {
-            TransactionValueValidateAndThrow(amount);
+            TransactionAmountValidateAndThrow(amount);
 
-            var fromUser = 
+            var fromAccount = 
                 await _bankAccountRepository.GetByIdAsync(fromAccountId, cancellationToken);
-            var toUser = 
+            var toAccount = 
                 await _bankAccountRepository.GetByIdAsync(toAccountId, cancellationToken);
 
-            var commissionValue = fromUser.UserId != toUser.UserId ? 0.02 : 0.0;
+            var commission = CalculateCommission(amount, fromAccount, toAccount);
 
-            return Math.Round(amount * commissionValue, 2);
+            return commission;
         }
 
         public async Task MoneyTransactAsync(
@@ -126,7 +126,7 @@ namespace Minibank.Core.Domains.BankAccounts.Services
             Guid toAccountId, 
             CancellationToken cancellationToken)
         {
-            TransactionValueValidateAndThrow(amount);
+            TransactionAmountValidateAndThrow(amount);
 
             var fromAccount = 
                 await _bankAccountRepository.GetByIdAsync(fromAccountId, cancellationToken);
@@ -135,8 +135,7 @@ namespace Minibank.Core.Domains.BankAccounts.Services
 
             TransactionValidateAndThrow(amount, fromAccount, toAccount);
 
-            var commissionValue = 
-                await CalculateCommissionAsync(amount, fromAccountId, toAccountId, cancellationToken);
+            var commissionValue = CalculateCommission(amount, fromAccount, toAccount);
             var creditedAmount = 
                 await _currencyConverter.ConvertCurrencyAsync(
                     amount - commissionValue, 
@@ -164,6 +163,20 @@ namespace Minibank.Core.Domains.BankAccounts.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Calculates the value of the commission for a transaction
+        /// </summary>
+        /// <param name="amount">Any number, including negative ones</param>
+        private double CalculateCommission(
+            double amount,
+            BankAccount fromAccount,
+            BankAccount toAccount)
+        {
+            var commissionValue = fromAccount.UserId != toAccount.UserId ? 0.02 : 0.0;
+
+            return Math.Round(amount * commissionValue, 2);
+        }
+
         private void AccountInactiveValidateAndThrow(BankAccount account)
         {
             if (!account.IsActive)
@@ -180,7 +193,7 @@ namespace Minibank.Core.Domains.BankAccounts.Services
             }
         }
 
-        private void TransactionValueValidateAndThrow(double amount)
+        private void TransactionAmountValidateAndThrow(double amount)
         {
             if (amount <= 0)
             {
