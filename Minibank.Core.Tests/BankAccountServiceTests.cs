@@ -492,11 +492,13 @@ namespace Minibank.Core.Tests
             Assert.Equal(expected, result);
         }
 
-        [Fact]
-        public async Task CalculateCommission_AmountTooSmall_ShouldThrowException()
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(0)]
+        public async Task CalculateCommission_AmountTooSmall_ShouldThrowException(double _amount)
         {
             //ARRANGE
-            var amount = -1;
+            var amount = _amount;
 
             //ACT
             var exception =
@@ -612,11 +614,13 @@ namespace Minibank.Core.Tests
                 Times.Once);
         }
 
-        [Fact]
-        public async Task MoneyTransact_AmountTooSmall_ShouldThrowException()
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(0)]
+        public async Task MoneyTransact_AmountTooSmall_ShouldThrowException(double _amount)
         {
             //ARRANGE
-            var amount = -1;
+            var amount = _amount;
 
             //ACT
             var exception =
