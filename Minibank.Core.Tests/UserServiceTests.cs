@@ -75,20 +75,18 @@ namespace Minibank.Core.Tests
         public async Task AddUser_SuccessPath_CreateCalled()
         {
             //ARRANGE
-            var expectedUser = new User()
+            var validUser = new User()
             {
                 Login = "someLogin",
                 Email = "someEmail@email.com"
             };
-            _mockUserRepository.Setup(repos =>
-                repos.CreateAsync(expectedUser, CancellationToken.None));
 
             //ACT
-            await _userService.CreateAsync(expectedUser, CancellationToken.None);
+            await _userService.CreateAsync(validUser, CancellationToken.None);
 
             //ASSERT
             _mockUserRepository.Verify(repos =>
-                repos.CreateAsync(expectedUser, CancellationToken.None),
+                repos.CreateAsync(validUser, CancellationToken.None),
                 Times.Once());
             _mockUnitOfWork.Verify(saver =>
                 saver.SaveChangesAsync(),
@@ -99,7 +97,7 @@ namespace Minibank.Core.Tests
         public async Task AddUser_EmptyLogin_ShouldThrowException()
         {
             //ARRANGE
-            var user = new User()
+            var invalidUser = new User()
             {
                 Login = "",
                 Email = "someEmail@email.com"
@@ -108,7 +106,7 @@ namespace Minibank.Core.Tests
             //ACT
             var exception =
                 await Assert.ThrowsAsync<FluentValidation.ValidationException>(() =>
-                _userService.CreateAsync(user, CancellationToken.None));
+                _userService.CreateAsync(invalidUser, CancellationToken.None));
 
             //ASSERT
             Assert.Contains(
@@ -120,7 +118,7 @@ namespace Minibank.Core.Tests
         public async Task AddUser_EmptyEmail_ShouldThrowException()
         {
             //ARRANGE
-            var user = new User()
+            var invalidUser = new User()
             {
                 Login = "someLogin",
                 Email = ""
@@ -129,7 +127,7 @@ namespace Minibank.Core.Tests
             //ACT
             var exception =
                 await Assert.ThrowsAsync<FluentValidation.ValidationException>(() =>
-                    _userService.CreateAsync(user, CancellationToken.None));
+                    _userService.CreateAsync(invalidUser, CancellationToken.None));
 
             //ASSERT
             Assert.Contains(
@@ -165,20 +163,18 @@ namespace Minibank.Core.Tests
         public async Task UpdateUser_SuccessPath_UpdateCalled()
         {
             //ARRANGE
-            var expectedUser = new User()
+            var validUser = new User()
             {
                 Login = "someLogin",
                 Email = "someEmail@email.com"
             };
-            _mockUserRepository.Setup(repos =>
-                repos.UpdateAsync(expectedUser, CancellationToken.None));
 
             //ACT
-            await _userService.UpdateAsync(expectedUser, CancellationToken.None);
+            await _userService.UpdateAsync(validUser, CancellationToken.None);
 
             //ASSERT
             _mockUserRepository.Verify(repos =>
-                repos.UpdateAsync(expectedUser, CancellationToken.None),
+                repos.UpdateAsync(validUser, CancellationToken.None),
                 Times.Once());
             _mockUnitOfWork.Verify(saver =>
                 saver.SaveChangesAsync(),
@@ -189,7 +185,7 @@ namespace Minibank.Core.Tests
         public async Task UpdateUser_EmptyLogin_ShouldThrowException()
         {
             //ARRANGE
-            var user = new User()
+            var invalidUser = new User()
             {
                 Login = "",
                 Email = "someEmail@email.com"
@@ -198,7 +194,7 @@ namespace Minibank.Core.Tests
             //ACT
             var exception =
                 await Assert.ThrowsAsync<FluentValidation.ValidationException>(() =>
-                _userService.UpdateAsync(user, CancellationToken.None));
+                _userService.UpdateAsync(invalidUser, CancellationToken.None));
 
             //ASSERT
             Assert.Contains(
@@ -210,7 +206,7 @@ namespace Minibank.Core.Tests
         public async Task UpdateUser_EmptyEmail_ShouldThrowException()
         {
             //ARRANGE
-            var user = new User()
+            var invalidUser = new User()
             {
                 Login = "someLogin",
                 Email = ""
@@ -219,7 +215,7 @@ namespace Minibank.Core.Tests
             //ACT
             var exception =
                 await Assert.ThrowsAsync<FluentValidation.ValidationException>(() =>
-                    _userService.UpdateAsync(user, CancellationToken.None));
+                    _userService.UpdateAsync(invalidUser, CancellationToken.None));
 
             //ASSERT
             Assert.Contains(
@@ -285,7 +281,7 @@ namespace Minibank.Core.Tests
 
             //ASSERT
             Assert.Contains(
-                "У пользователя с id: 00000000-0000-0000-0000-000000000000 есть привязанные банковские аккаунты",
+                $"У пользователя с id: {userId} есть привязанные банковские аккаунты",
                 exception.ValidationMessage);
         }
     }
