@@ -1,5 +1,9 @@
 ﻿using System.Reflection;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Extensions;
+using Microsoft.OpenApi.Models;
 using Minibank.Core;
 using Minibank.Data;
 using Minibank.Web.HostedServices;
@@ -22,14 +26,56 @@ namespace Minibank.Web
             {
                 j.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
-            services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(options =>
             {
-                c.SwaggerDoc("v3", new Microsoft.OpenApi.Models.OpenApiInfo 
+                options.SwaggerDoc("v3", new Microsoft.OpenApi.Models.OpenApiInfo
                     {Title = "MiniBank.Web", Version = "v3"});
                 var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+                options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+
+                options.AddSecurityDefinition("oauth2",
+                    new OpenApiSecurityScheme()
+                    {
+                        Type = SecuritySchemeType.OAuth2,
+                        Flows = new OpenApiOAuthFlows()
+                        {
+                            ClientCredentials = new OpenApiOAuthFlow()
+                            {
+                                TokenUrl = new Uri("https://demo.duendesoftware.com/connect/token"),
+                                Scopes = new Dictionary<string, string>()
+                            }
+                        }
+                    });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme()
+                        {
+                            Reference = new OpenApiReference()
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = SecuritySchemeType.OAuth2.GetDisplayName()
+                            }
+                        },
+                        new List<string>()
+                    }
+                });
             });
-            
+
+            services
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.Audience = "api";
+                    options.Authority = "https://demo.duendesoftware.com";
+                    options.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidateLifetime = true,
+                        ValidateAudience = false
+                    };
+                });
+
             services.
                 AddData(Configuration).
                 AddCore();
@@ -53,6 +99,8 @@ namespace Minibank.Web
 
             app.UseHttpsRedirection();
             app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
 
