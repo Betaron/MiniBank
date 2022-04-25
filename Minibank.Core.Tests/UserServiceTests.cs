@@ -252,6 +252,9 @@ namespace Minibank.Core.Tests
         {
             //ARRANGE
             var userId = Guid.Empty;
+            _mockBankAccountRepository.Setup(repos =>
+                    repos.ExistsByUserIdAsync(userId, CancellationToken.None))
+                .ReturnsAsync(false);
 
             //ACT
             await _userService.DeleteAsync(userId, CancellationToken.None);
