@@ -71,7 +71,7 @@ namespace Minibank.Web
                     options.Authority = "https://demo.duendesoftware.com";
                     options.TokenValidationParameters = new TokenValidationParameters()
                     {
-                        ValidateLifetime = true,
+                        ValidateLifetime = false,
                         ValidateAudience = false
                     };
                 });
@@ -99,6 +99,8 @@ namespace Minibank.Web
 
             app.UseHttpsRedirection();
             app.UseRouting();
+
+            app.UseMiddleware<CustomAuthenticationMiddleware>();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints => endpoints.MapControllers());

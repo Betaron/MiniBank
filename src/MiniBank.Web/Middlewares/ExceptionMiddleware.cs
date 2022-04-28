@@ -17,6 +17,12 @@ namespace Minibank.Web.Middlewares
             {
                 await next(httpContext);
             }
+            catch (ExpiredTokenException)
+            {
+                httpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
+                await httpContext.Response.WriteAsJsonAsync(
+                    new { Message = "Токен авторизации просрочен" });
+            }
             catch (ValidationException exception)
             {
                 httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
