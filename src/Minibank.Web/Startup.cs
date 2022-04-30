@@ -28,8 +28,8 @@ namespace Minibank.Web
             });
             services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v3", new Microsoft.OpenApi.Models.OpenApiInfo
-                    {Title = "MiniBank.Web", Version = "v3"});
+                options.SwaggerDoc("v4", new Microsoft.OpenApi.Models.OpenApiInfo
+                    {Title = "MiniBank.Web", Version = "v4"});
                 var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 
@@ -91,7 +91,7 @@ namespace Minibank.Web
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint("/swagger/v3/swagger.json", "MiniBank.Web v3");
+                    c.SwaggerEndpoint("/swagger/v4/swagger.json", "MiniBank.Web v4");
                 });
             }
 
