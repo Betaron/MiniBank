@@ -88,12 +88,13 @@ namespace Minibank.Web
             if (environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c =>
-                {
-                    c.SwaggerEndpoint("/swagger/v4/swagger.json", "MiniBank.Web v4");
-                });
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v4/swagger.json", "MiniBank.Web v4");
+            });
 
             app.UseMiddleware<ExceptionMiddleware>();
 
