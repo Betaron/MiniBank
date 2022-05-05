@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Minibank.Core.Domains.MoneyTransferHistoryUnits;
 using Minibank.Core.Domains.MoneyTransferHistoryUnits.Services;
 using Minibank.Web.Controllers.MoneyTransferHistoryUnits.Dto;
@@ -6,6 +7,7 @@ using Minibank.Web.Controllers.MoneyTransferHistoryUnits.Dto;
 namespace Minibank.Web.Controllers.MoneyTransferHistoryUnits
 {
     [ApiController]
+    [Authorize]
     [Route("history")]
     public class HistoryController
     {

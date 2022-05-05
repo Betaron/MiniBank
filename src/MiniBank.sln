@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Minibank.Web", "MiniBank.Web\Minibank.Web.csproj", "{C0197832-CC55-43A3-91A8-5A29BB06343A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Minibank.Web", "Minibank.Web\Minibank.Web.csproj", "{C0197832-CC55-43A3-91A8-5A29BB06343A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Minibank.Core", "Minibank.Core\Minibank.Core.csproj", "{1CEC797F-5E00-448C-8A1D-81DD06B3D4FE}"
 EndProject

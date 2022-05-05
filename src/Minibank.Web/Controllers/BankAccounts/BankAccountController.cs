@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Minibank.Core.Domains.BankAccounts;
 using Minibank.Core.Domains.BankAccounts.Services;
 using Minibank.Web.Controllers.BankAccounts.Dto;
@@ -6,6 +7,7 @@ using Minibank.Web.Controllers.BankAccounts.Dto;
 namespace Minibank.Web.Controllers.BankAccounts
 {
     [ApiController]
+    [Authorize]
     [Route("bank-account")]
     public class BankAccountController
     {
